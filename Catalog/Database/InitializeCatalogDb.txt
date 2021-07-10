@@ -1,0 +1,2 @@
+use azisfood_catalog
+db.createCollection('Product')
