@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using AutoMapper;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
+using Catalog.Dto;
+using Catalog.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -14,12 +18,12 @@ namespace Catalog.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> _logger;
-        private readonly IBaseRepository<Product> _productRepository;
+        private readonly IProductService _productService;
 
-        public ProductController(ILogger<ProductController> logger, IBaseRepository<Product> productRepository)
+        public ProductController(ILogger<ProductController> logger, IProductService productService)
         {
             _logger = logger;
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
         /// <summary>
@@ -27,25 +31,41 @@ namespace Catalog.Controllers
         /// </summary>
         /// <returns>List of <see cref="Product"/>.</returns>
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> Get() =>
-            await _productRepository.GetAsync();
-        
+        public async Task<ActionResult<List<ProductDto>>> Get()
+        {
+            try
+            {
+                var data = await _productService.GetAllProductsAsync();
+                return data;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         /// <summary>
         /// Get product from database by id.
         /// </summary>
         /// <param name="id">Id of product to get.</param>
         /// <returns></returns>
         [HttpGet("{id:length(24)}", Name = "GetProduct")]
-        public async Task<ActionResult<Product>> Get(string id)
+        public async Task<ActionResult<ProductDto>> Get(string id)
         {
-            var product = await _productRepository.GetAsync(id);
-
-            if (product == null)
+            try
             {
-                return NotFound();
+                return await _productService.GetProductByIdAsync(id);
             }
-
-            return product;
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
         
         /// <summary>
@@ -54,12 +74,13 @@ namespace Catalog.Controllers
         /// <param name="product">Model of new product.</param>
         /// <returns>Model of product, created on the database.</returns>
         [HttpPost]
-        public async Task<ActionResult<Product>> Create(Product product)
+        public async Task<ActionResult<Product>> Create(ProductRequestDto product)
         {
             try
             {
-                var insertedId = await _productRepository.CreateAsync(product);
-                return CreatedAtRoute("GetProduct", new {id = insertedId.Id}, product);
+                var insertedProduct = await _productService.AddProductAsync(product);
+                return CreatedAtRoute("GetProduct", new {id = insertedProduct.Id},
+                    insertedProduct);
             }
             catch (InvalidConstraintException e)
             {
@@ -67,7 +88,8 @@ namespace Catalog.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e);
+                _logger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
         
@@ -78,18 +100,22 @@ namespace Catalog.Controllers
         /// <param name="productIn">New model of product.</param>
         /// <returns>Indicates success or fail of operation.</returns>
         [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, [FromBody] Product productIn)
+        public async Task<IActionResult> Update(string id, [FromBody] ProductRequestDto productIn)
         {
-            var product = await _productRepository.GetAsync(id);
-
-            if (product == null)
+            try
+            {
+                await _productService.UpdateProductAsync(id, productIn);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            await _productRepository.UpdateAsync(id, productIn);
-
-            return NoContent();
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
         
         /// <summary>
@@ -100,16 +126,20 @@ namespace Catalog.Controllers
         [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var product = await _productRepository.GetAsync(id);
-
-            if (product == null)
+            try
+            {
+                var product = await _productService.DeleteProductAsync(id);
+                return Ok($"Successfully deleted {product.Title} [{product.Id}]");
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            await _productRepository.RemoveAsync(product.Id);
-
-            return Ok($"Successfully deleted {product.Title} [{product.Id}]");
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
         
         /// <summary>
@@ -120,8 +150,8 @@ namespace Catalog.Controllers
         [HttpDelete("DeleteMany")]
         public async Task<IActionResult> DeleteMany([FromBody] string[] ids)
         {
-            await _productRepository.RemoveManyAsync(ids);
-            return Ok($"Successfully deleted");
+            await _productService.DeleteProductsAsync(ids);
+            return Ok($"Successfully deleted {ids.Length} product(s)");
         }
     }
 }

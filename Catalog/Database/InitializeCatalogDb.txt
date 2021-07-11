@@ -1,2 +1,22 @@
 use azisfood_catalog
 db.createCollection('Product')
+db.Product.insert({
+    "id": "60ea2797946e523f3cbd4a67",
+    "title": "New product",
+    "description": "Awesome new product!",
+    "imgUrl": "",
+    "price": 9.99,
+    "categoryId": [],
+    "nutritionFact": {
+      "energy": 900,
+      "calories": 220,
+      "totalFat": 13,
+      "carbohydrates": 17,
+      "proteins": 8.5,
+      "totalSugar": 10,
+      "id": "60ea2797946e523f3cbd4a65"
+    },
+    "servingSize": 284,
+    "ingredientId": [],
+    "optionId": []
+  })

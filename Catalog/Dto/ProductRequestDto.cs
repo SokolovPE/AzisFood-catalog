@@ -1,9 +1,8 @@
-﻿namespace Catalog.DataAccess.Models
+﻿using Catalog.DataAccess.Models;
+
+namespace Catalog.Dto
 {
-    /// <summary>
-    /// Model of product presented in catalog.
-    /// </summary>
-    public class Product : MongoRepoEntity
+    public class ProductRequestDto
     {
         /// <summary>
         /// Title of product.
@@ -31,7 +30,7 @@
         public string[] CategoryId { get; set; }
         
         /// <summary>
-        /// Nutrition facts for 100g of product.
+        /// Nutrition facts of this product.
         /// </summary>
         public NutritionFact NutritionFact { get; set; }
         
@@ -49,5 +48,6 @@
         /// Options available for product.
         /// </summary>
         public string[] OptionId { get; set; }
+        
     }
 }

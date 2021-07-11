@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
+using Catalog.Mappings;
+using Catalog.Services.Implementations;
+using Catalog.Services.Interfaces;
 using Jaeger;
 using Jaeger.Reporters;
 using Jaeger.Samplers;
@@ -36,6 +39,11 @@ namespace Catalog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
+            // Register mappings.
+            services.AddMapper();
+            
+            // Add open tracing with Jaeger.
             services.AddOpenTracing();
             services.AddSingleton<ITracer>(sp =>
             {
@@ -56,10 +64,14 @@ namespace Catalog
                     request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog", Version = "v1"}); });
             
+            // Add MongoDb provider.
             services.Configure<MongoOptions>(Configuration.GetSection(nameof(MongoOptions)));
             services.AddSingleton<IMongoOptions>(sp =>
                 sp.GetRequiredService<IOptions<MongoOptions>>().Value);
-            services.AddScoped(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
+            
+            // Registrations.
+            services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
+            services.AddTransient<IProductService, ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,6 +9,7 @@ using MongoDB.Driver;
 
 namespace Catalog.DataAccess.Implementations
 {
+    // TODO: Exception handling!!!
     public class MongoBaseRepository<TRepoEntity> : IBaseRepository<TRepoEntity> where TRepoEntity: MongoRepoEntity
     {
         private readonly ILogger<MongoBaseRepository<TRepoEntity>> _logger;
