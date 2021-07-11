@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
+using Catalog.Extensions;
 using Catalog.Mappings;
 using Catalog.Services.Implementations;
 using Catalog.Services.Interfaces;

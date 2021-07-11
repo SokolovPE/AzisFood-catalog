@@ -1,8 +1,7 @@
-﻿using System.Reflection;
-using AutoMapper;
+﻿using Catalog.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Catalog.Mappings
+namespace Catalog.Extensions
 {
     /// <summary>
     /// Extensions for using AutoMapper.
