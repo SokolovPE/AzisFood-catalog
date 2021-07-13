@@ -14,8 +14,8 @@ namespace Catalog.Services.Implementations
     {
         private readonly ILogger<ProductService> _logger;
         private readonly IMapper _mapper;
-        private readonly IBaseRepository<Product> _productRepository;
-        public ProductService(ILogger<ProductService> logger, IMapper mapper, IBaseRepository<Product> productRepository)
+        private readonly ICachedBaseRepository<Product> _productRepository;
+        public ProductService(ILogger<ProductService> logger, IMapper mapper, ICachedBaseRepository<Product> productRepository)
         {
             _logger = logger;
             _mapper = mapper;

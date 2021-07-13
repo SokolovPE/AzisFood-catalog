@@ -8,6 +8,10 @@ using Catalog.Extensions;
 using Catalog.Mappings;
 using Catalog.Services.Implementations;
 using Catalog.Services.Interfaces;
+using Hangfire;
+using Hangfire.Mongo;
+using Hangfire.Mongo.Migration.Strategies;
+using Hangfire.Mongo.Migration.Strategies.Backup;
 using Jaeger;
 using Jaeger.Reporters;
 using Jaeger.Samplers;
@@ -22,6 +26,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using OpenTracing;
 using OpenTracing.Contrib.NetCore.Configuration;
 
@@ -65,13 +70,44 @@ namespace Catalog
                     request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog", Version = "v1"}); });
             
-            // Add MongoDb provider.
+            // Add MongoDb config.
             services.Configure<MongoOptions>(Configuration.GetSection(nameof(MongoOptions)));
             services.AddSingleton<IMongoOptions>(sp =>
                 sp.GetRequiredService<IOptions<MongoOptions>>().Value);
             
+            // Add Redis config.
+            services.Configure<RedisOptions>(Configuration.GetSection(nameof(RedisOptions)));
+            services.AddSingleton<IRedisOptions>(sp =>
+                sp.GetRequiredService<IOptions<RedisOptions>>().Value);
+            services.AddSingleton<IRedisCacheService, RedisCacheService>();
+            
+            // Add hangfire.
+            //TODO: GET from appsettings...no time now...
+            var mongoClient = new MongoClient("mongodb://localhost:27017");
+            services.AddHangfire(config =>
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseMongoStorage(mongoClient, "azisfood_catalog", new MongoStorageOptions
+                    {
+                        MigrationOptions = new MongoMigrationOptions
+                        {
+                            MigrationStrategy = new MigrateMongoMigrationStrategy(),
+                            BackupStrategy = new CollectionMongoBackupStrategy()
+                        },
+                        Prefix = "hangfire.mongo",
+                        CheckConnection = true
+                    })
+            );
+            // Add the processing server as IHostedService
+            services.AddHangfireServer(serverOptions =>
+            {
+                serverOptions.ServerName = "Hangfire.Mongo server 1";
+            });
+            
             // Registrations.
             services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
+            services.AddTransient(typeof(ICachedBaseRepository<>), typeof(MongoCachedBaseRepository<>));
             services.AddTransient<IProductService, ProductService>();
         }
 
@@ -92,6 +128,7 @@ namespace Catalog
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseHangfireDashboard();
         }
     }
 }
