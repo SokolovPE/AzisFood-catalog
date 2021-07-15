@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalog.DataAccess.Attributes;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
-using Hangfire;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
-using StackExchange.Redis;
 
 namespace Catalog.DataAccess.Implementations
 {
@@ -18,18 +17,32 @@ namespace Catalog.DataAccess.Implementations
     {
         private readonly ILogger<MongoCachedBaseRepository<TRepoEntity>> _logger;
         private readonly IRedisCacheService _cacheService;
-        private readonly TimeSpan _expiry;
+        private readonly ISendEndpointProvider  _sendEndpointProvider;
         private readonly string _repoEntityName;
+        private readonly string _queueName;
+        // ReSharper disable once MemberCanBePrivate.Global
+        // Because Items should be available in derived repositories.
         protected readonly IMongoCollection<TRepoEntity> Items;
         
-        public MongoCachedBaseRepository(ILogger<MongoCachedBaseRepository<TRepoEntity>> logger, IMongoOptions mongoOptions, IRedisCacheService cacheService)
+        public MongoCachedBaseRepository(ILogger<MongoCachedBaseRepository<TRepoEntity>> logger,
+            IMongoOptions mongoOptions,
+            IRedisCacheService cacheService,
+            ISendEndpointProvider sendEndpointProvider)
         {
             _logger = logger;
             _cacheService = cacheService;
-            
+            _sendEndpointProvider = sendEndpointProvider;
+
             // Fill constants.
-            _expiry = TimeSpan.FromDays(1);
             _repoEntityName = typeof(TRepoEntity).Name;
+            
+            _queueName = string.Empty;
+            var customAttributes = (BusCacheTopic[])typeof(TRepoEntity).GetCustomAttributes(typeof(BusCacheTopic), true);
+            if (customAttributes.Length > 0)
+            {
+                var queueNameAttribute = customAttributes[0];
+                _queueName = $"queue:{queueNameAttribute.Name}";
+            }
             
             var client = new MongoClient(mongoOptions.ConnectionString);
             var database = client.GetDatabase(mongoOptions.DatabaseName);
@@ -46,11 +59,7 @@ namespace Catalog.DataAccess.Implementations
             }
             
             var dbResult = await (await Items.FindAsync(item => true)).ToListAsync();
-            var cacheSetResult = await _cacheService.SetAsync(_repoEntityName, dbResult, _expiry);
-            if (!cacheSetResult)
-            {
-                _logger.LogWarning($"Unable to set {_repoEntityName} to cache");
-            }
+            await RefreshCache("Get");
 
             return dbResult;
         }
@@ -63,44 +72,45 @@ namespace Catalog.DataAccess.Implementations
             // Assign unique id.
             item.Id = ObjectId.GenerateNewId().ToString();
             await Items.InsertOneAsync(item);
-            BackgroundJob.Enqueue(() => RefreshCache());
+
+            await RefreshCache("Create");
             return item;
         }
 
         public async Task UpdateAsync(string id, TRepoEntity itemIn)
         {
             await Items.ReplaceOneAsync(item => item.Id == id, itemIn);
-            BackgroundJob.Enqueue(() => RefreshCache());
+            await RefreshCache("Update");
         }
 
         public async Task RemoveAsync(TRepoEntity itemIn)
         {
             await Items.DeleteOneAsync(item => item.Id == itemIn.Id);
-            BackgroundJob.Enqueue(() => RefreshCache());
+            await RefreshCache("Remove");
         }
 
         public async Task RemoveAsync(string id)
         {
             await Items.DeleteOneAsync(item => item.Id == id);
-            BackgroundJob.Enqueue(() => RefreshCache());
+            await RefreshCache("RemoveById");
         }
 
         public async Task RemoveManyAsync(string[] ids)
         {
             await Items.DeleteManyAsync(item => ids.Contains(item.Id));
-            BackgroundJob.Enqueue(() => RefreshCache());
+            await RefreshCache("RemoveMany");
         }
 
-        // ReSharper disable once MemberCanBePrivate.Global
-        // Required by hangfire.
-        public async Task RefreshCache()
+        /// <summary>
+        /// Send signal to refresh cache using RabbitMQ.
+        /// </summary>
+        /// <param name="source">Source method.</param>
+        private async Task RefreshCache(string source)
         {
-            await _cacheService.RemoveAsync(_repoEntityName);
-            var items = await (await Items.FindAsync(i => true)).ToListAsync();
-            var cacheSetResult = await _cacheService.SetAsync(_repoEntityName, items, _expiry);
-            if (!cacheSetResult)
+            if (!string.IsNullOrEmpty(_queueName))
             {
-                _logger.LogWarning($"Unable to refresh {_repoEntityName} cache");
+                var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(_queueName));
+                await endpoint.Send(new CacheSignal(source));
             }
         }
     }

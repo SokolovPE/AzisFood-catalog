@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog", "Catalog\Catalog.csproj", "{494C650D-E799-4631-A8CD-2498A9F6384B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "Catalog.API\Catalog.API.csproj", "{494C650D-E799-4631-A8CD-2498A9F6384B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Worker", "Catalog.Worker\Catalog.Worker.csproj", "{8E6E4FCF-3D8E-4506-950B-4996939771AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.DataAccess", "Catalog.DataAccess\Catalog.DataAccess.csproj", "{282EEFE2-13BA-4585-B04F-946495B87643}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +16,13 @@ Global
 		{494C650D-E799-4631-A8CD-2498A9F6384B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{494C650D-E799-4631-A8CD-2498A9F6384B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{494C650D-E799-4631-A8CD-2498A9F6384B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E6E4FCF-3D8E-4506-950B-4996939771AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E6E4FCF-3D8E-4506-950B-4996939771AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E6E4FCF-3D8E-4506-950B-4996939771AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E6E4FCF-3D8E-4506-950B-4996939771AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{282EEFE2-13BA-4585-B04F-946495B87643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{282EEFE2-13BA-4585-B04F-946495B87643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{282EEFE2-13BA-4585-B04F-946495B87643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{282EEFE2-13BA-4585-B04F-946495B87643}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

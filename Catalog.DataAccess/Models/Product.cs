@@ -1,8 +1,11 @@
-﻿namespace Catalog.DataAccess.Models
+﻿using Catalog.DataAccess.Attributes;
+
+namespace Catalog.DataAccess.Models
 {
     /// <summary>
     /// Model of product presented in catalog.
     /// </summary>
+    [BusCacheTopic(Name = "recache.product")]
     public class Product : MongoRepoEntity
     {
         /// <summary>

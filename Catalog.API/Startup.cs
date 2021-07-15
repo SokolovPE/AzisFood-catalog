@@ -1,32 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
+using Catalog.DataAccess.Models;
 using Catalog.Extensions;
-using Catalog.Mappings;
 using Catalog.Services.Implementations;
 using Catalog.Services.Interfaces;
-using Hangfire;
-using Hangfire.Mongo;
-using Hangfire.Mongo.Migration.Strategies;
-using Hangfire.Mongo.Migration.Strategies.Backup;
 using Jaeger;
 using Jaeger.Reporters;
 using Jaeger.Samplers;
 using Jaeger.Senders.Thrift;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
 using OpenTracing;
 using OpenTracing.Contrib.NetCore.Configuration;
 
@@ -68,7 +58,7 @@ namespace Catalog
             services.Configure<HttpHandlerDiagnosticOptions>(options =>
                 options.OperationNameResolver =
                     request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog", Version = "v1"}); });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog.API", Version = "v1"}); });
             
             // Add MongoDb config.
             services.Configure<MongoOptions>(Configuration.GetSection(nameof(MongoOptions)));
@@ -81,29 +71,15 @@ namespace Catalog
                 sp.GetRequiredService<IOptions<RedisOptions>>().Value);
             services.AddSingleton<IRedisCacheService, RedisCacheService>();
             
-            // Add hangfire.
-            //TODO: GET from appsettings...no time now...
-            var mongoClient = new MongoClient("mongodb://localhost:27017");
-            services.AddHangfire(config =>
-                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                    .UseSimpleAssemblyNameTypeSerializer()
-                    .UseRecommendedSerializerSettings()
-                    .UseMongoStorage(mongoClient, "azisfood_catalog", new MongoStorageOptions
-                    {
-                        MigrationOptions = new MongoMigrationOptions
-                        {
-                            MigrationStrategy = new MigrateMongoMigrationStrategy(),
-                            BackupStrategy = new CollectionMongoBackupStrategy()
-                        },
-                        Prefix = "hangfire.mongo",
-                        CheckConnection = true
-                    })
-            );
-            // Add the processing server as IHostedService
-            services.AddHangfireServer(serverOptions =>
+            // Add RabbitMQ MassTransit.
+            services.AddMassTransit(config =>
             {
-                serverOptions.ServerName = "Hangfire.Mongo server 1";
+                config.UsingRabbitMq((_, cfg) =>
+                {
+                    cfg.Host("amqp://sub:q12345@localhost:5672/catalog");
+                });
             });
+            services.AddMassTransitHostedService();
             
             // Registrations.
             services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
@@ -118,7 +94,7 @@ namespace Catalog
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog.API v1"));
             }
 
             app.UseHttpsRedirection();
@@ -128,7 +104,6 @@ namespace Catalog
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            app.UseHangfireDashboard();
         }
     }
 }
