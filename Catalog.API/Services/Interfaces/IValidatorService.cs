@@ -1,0 +1,19 @@
+﻿using System;
+using System.Threading.Tasks;
+using Catalog.DataAccess.Models;
+
+namespace Catalog.Services.Interfaces
+{
+    /// <summary>
+    /// Service to validate <see cref="T"/>.
+    /// </summary>
+    public interface IValidatorService<in T> where  T: IRepoEntity
+    {
+        /// <summary>
+        /// Validate object for errors.
+        /// </summary>
+        /// <param name="item">Object to validate.</param>
+        /// <returns>Validation result.</returns>
+        public Task<Tuple<bool, string>> Validate(T item);
+    }
+}

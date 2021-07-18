@@ -89,6 +89,7 @@ namespace Catalog
             services.AddTransient(typeof(IService<Ingredient, IngredientDto, IngredientRequestDto>),
                 typeof(BaseService<Ingredient, IngredientDto, IngredientRequestDto>));
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IValidatorService<Product>, ProductValidatorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

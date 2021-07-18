@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
 using Catalog.DataAccess.Interfaces;
@@ -12,9 +13,34 @@ namespace Catalog.Services.Implementations
 {
     public class ProductService : BaseService<Product, ProductDto, ProductRequestDto>, IProductService
     {
-        public ProductService(ILogger<ProductService> logger, IMapper mapper, ICachedBaseRepository<Product> repository) 
+        private readonly IValidatorService<Product> _validator;
+        public ProductService(ILogger<ProductService> logger,
+            IMapper mapper,
+            ICachedBaseRepository<Product> repository,
+            IValidatorService<Product> validator) 
             : base(logger, mapper, repository)
         {
+            _validator = validator;
+        }
+
+        public override async Task<ProductDto> AddAsync(ProductRequestDto item)
+        {
+            try
+            {
+                var itemToInsert = Mapper.Map<Product>(item);
+                var (validationResult, validationMessage) = await _validator.Validate(itemToInsert);
+                if (!validationResult)
+                {
+                    throw new ValidationException(validationMessage);
+                }
+                var insertedItem = await Repository.CreateAsync(itemToInsert);
+                return Mapper.Map<ProductDto>(insertedItem);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, $"Exception during attempt to insert record of {EntityName}");
+                throw;
+            }
         }
     }
 }

@@ -15,43 +15,43 @@ namespace Catalog.Services.Implementations
         where TDto: IDto
         where TRequestDto: IRequestDto
     {
-        private readonly ILogger<BaseService<T, TDto, TRequestDto>> _logger;
-        private readonly IMapper _mapper;
-        private readonly ICachedBaseRepository<T> _repository;
-        private readonly string _entityName;
+        protected readonly ILogger<BaseService<T, TDto, TRequestDto>> Logger;
+        protected readonly IMapper Mapper;
+        protected readonly ICachedBaseRepository<T> Repository;
+        protected readonly string EntityName;
 
         public BaseService(ILogger<BaseService<T, TDto, TRequestDto>> logger,
             IMapper mapper,
             ICachedBaseRepository<T> repository)
         {
-            _logger = logger;
-            _mapper = mapper;
-            _repository = repository;
-            _entityName = typeof(T).Name;
+            Logger = logger;
+            Mapper = mapper;
+            Repository = repository;
+            EntityName = typeof(T).Name;
         }
         
         public virtual async Task<List<TDto>> GetAllAsync()
         {
             try
             {
-                var items = await _repository.GetAsync();
-                return _mapper.Map<List<TDto>>(items);
+                var items = await Repository.GetAsync();
+                return Mapper.Map<List<TDto>>(items);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Exception during attempt to get all {_entityName} from catalog");
+                Logger.LogError(e, $"Exception during attempt to get all {EntityName} from catalog");
                 throw;
             }
         }
 
         public virtual async Task<TDto> GetByIdAsync(string id)
         {
-            var item = await _repository.GetAsync(id);
+            var item = await Repository.GetAsync(id);
 
-            if (item != null) return _mapper.Map<TDto>(item);
+            if (item != null) return Mapper.Map<TDto>(item);
             
-            var msg = $"Requested {_entityName} with id: {id} was not found in catalog.";
-            _logger.LogWarning(msg);
+            var msg = $"Requested {EntityName} with id: {id} was not found in catalog.";
+            Logger.LogWarning(msg);
             throw new KeyNotFoundException(msg);
         }
 
@@ -59,49 +59,49 @@ namespace Catalog.Services.Implementations
         {
             try
             {
-                var itemToInsert = _mapper.Map<T>(item);
-                var insertedItem = await _repository.CreateAsync(itemToInsert);
-                return _mapper.Map<TDto>(insertedItem);
+                var itemToInsert = Mapper.Map<T>(item);
+                var insertedItem = await Repository.CreateAsync(itemToInsert);
+                return Mapper.Map<TDto>(insertedItem);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Exception during attempt to insert record of {_entityName}");
+                Logger.LogError(e, $"Exception during attempt to insert record of {EntityName}");
                 throw;
             }
         }
 
         public virtual async Task UpdateAsync(string id, TRequestDto item)
         {
-            var itemFromDb = await _repository.GetAsync(id);
+            var itemFromDb = await Repository.GetAsync(id);
 
             if (itemFromDb == null)
             {
-                _logger.LogWarning($"Requested {_entityName} for update with id: {id} was not found in catalog.");
+                Logger.LogWarning($"Requested {EntityName} for update with id: {id} was not found in catalog.");
                 throw new KeyNotFoundException();
             }
 
-            var itemUpdated = _mapper.Map<T>(item);
+            var itemUpdated = Mapper.Map<T>(item);
             itemUpdated.Id = id;
-            await _repository.UpdateAsync(id, itemUpdated);
+            await Repository.UpdateAsync(id, itemUpdated);
         }
 
         public virtual async Task<T> DeleteAsync(string id)
         {
-            var item = await _repository.GetAsync(id);
+            var item = await Repository.GetAsync(id);
 
             if (item == null)
             {
-                _logger.LogWarning($"Requested {_entityName} for delete with id: {id} was not found in catalog.");
+                Logger.LogWarning($"Requested {EntityName} for delete with id: {id} was not found in catalog.");
                 throw new KeyNotFoundException();
             }
 
-            await _repository.RemoveAsync(item.Id);
+            await Repository.RemoveAsync(item.Id);
             return item;
         }
 
         public virtual async Task DeleteAsync(string[] ids)
         {
-            if (ids.Length > 0) await _repository.RemoveManyAsync(ids);
+            if (ids.Length > 0) await Repository.RemoveManyAsync(ids);
         }
     }
 }

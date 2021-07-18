@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -82,6 +83,7 @@ namespace Catalog.Controllers
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Product>> Create(ProductRequestDto product)
         {
             try
@@ -89,6 +91,10 @@ namespace Catalog.Controllers
                 var insertedProduct = await _productService.AddAsync(product);
                 return CreatedAtRoute("GetProduct", new {id = insertedProduct.Id},
                     insertedProduct);
+            }
+            catch (ValidationException e)
+            {
+                return ValidationProblem(e.Message);
             }
             catch (InvalidConstraintException e)
             {
