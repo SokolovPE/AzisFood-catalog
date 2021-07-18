@@ -1,8 +1,9 @@
-﻿using Catalog.DataAccess.Models;
+﻿using System.Collections.Generic;
+using Catalog.DataAccess.Models;
 
 namespace Catalog.Dto
 {
-    public class ProductRequestDto
+    public class ProductRequestDto : IRequestDto
     {
         /// <summary>
         /// Title of product.
@@ -17,7 +18,7 @@ namespace Catalog.Dto
         /// <summary>
         /// Url of image cover.
         /// </summary>
-        public string ImgUrl { get; set; }
+        public string ImageUrl { get; set; }
         
         /// <summary>
         /// Price of product.
@@ -42,7 +43,7 @@ namespace Catalog.Dto
         /// <summary>
         /// Ingredients product made of.
         /// </summary>
-        public string[] IngredientId { get; set; }
+        public IEnumerable<IngredientUsage> Ingredients { get; set; }
         
         /// <summary>
         /// Options available for product.

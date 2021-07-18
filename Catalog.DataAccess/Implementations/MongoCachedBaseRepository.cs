@@ -20,6 +20,7 @@ namespace Catalog.DataAccess.Implementations
         private readonly ISendEndpointProvider  _sendEndpointProvider;
         private readonly string _repoEntityName;
         private readonly string _queueName;
+        
         // ReSharper disable once MemberCanBePrivate.Global
         // Because Items should be available in derived repositories.
         protected readonly IMongoCollection<TRepoEntity> Items;

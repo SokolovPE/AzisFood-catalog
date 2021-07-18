@@ -29,7 +29,7 @@ namespace Catalog
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -76,6 +76,7 @@ namespace Catalog
             {
                 config.UsingRabbitMq((_, cfg) =>
                 {
+                    //TODO: Move to config file
                     cfg.Host("amqp://sub:q12345@localhost:5672/catalog");
                 });
             });

@@ -1,4 +1,6 @@
-﻿using Catalog.DataAccess.Attributes;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Catalog.DataAccess.Attributes;
 
 namespace Catalog.DataAccess.Models
 {
@@ -21,7 +23,7 @@ namespace Catalog.DataAccess.Models
         /// <summary>
         /// Url of image cover.
         /// </summary>
-        public string ImgUrl { get; set; }
+        public string ImageUrl { get; set; }
         
         /// <summary>
         /// Price of product.
@@ -46,7 +48,7 @@ namespace Catalog.DataAccess.Models
         /// <summary>
         /// Ingredients product made of.
         /// </summary>
-        public string[] IngredientId { get; set; }
+        public IEnumerable<IngredientUsage> Ingredients { get; set; }
         
         /// <summary>
         /// Options available for product.

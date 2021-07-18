@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Catalog.DataAccess.Models
 {
-    public abstract class MongoRepoEntity
+    public abstract class MongoRepoEntity : IRepoEntity
     {
         /// <summary>
         /// Identifier.

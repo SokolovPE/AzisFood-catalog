@@ -35,7 +35,7 @@ namespace Catalog.Controllers
         {
             try
             {
-                var data = await _productService.GetAllProductsAsync();
+                var data = await _productService.GetAllAsync();
                 return data;
             }
             catch (Exception e)
@@ -55,7 +55,7 @@ namespace Catalog.Controllers
         {
             try
             {
-                return await _productService.GetProductByIdAsync(id);
+                return await _productService.GetByIdAsync(id);
             }
             catch (KeyNotFoundException e)
             {
@@ -78,7 +78,7 @@ namespace Catalog.Controllers
         {
             try
             {
-                var insertedProduct = await _productService.AddProductAsync(product);
+                var insertedProduct = await _productService.AddAsync(product);
                 return CreatedAtRoute("GetProduct", new {id = insertedProduct.Id},
                     insertedProduct);
             }
@@ -104,7 +104,7 @@ namespace Catalog.Controllers
         {
             try
             {
-                await _productService.UpdateProductAsync(id, productIn);
+                await _productService.UpdateAsync(id, productIn);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -128,7 +128,7 @@ namespace Catalog.Controllers
         {
             try
             {
-                var product = await _productService.DeleteProductAsync(id);
+                var product = await _productService.DeleteAsync(id);
                 return Ok($"Successfully deleted {product.Title} [{product.Id}]");
             }
             catch (KeyNotFoundException)
@@ -150,7 +150,7 @@ namespace Catalog.Controllers
         [HttpDelete("DeleteMany")]
         public async Task<IActionResult> DeleteMany([FromBody] string[] ids)
         {
-            await _productService.DeleteProductsAsync(ids);
+            await _productService.DeleteAsync(ids);
             return Ok($"Successfully deleted {ids.Length} product(s)");
         }
     }
