@@ -5,7 +5,7 @@ namespace Catalog.Dto
     /// <summary>
     /// Data transfer object for product.
     /// </summary>
-    public class ProductDto : ProductRequestDto, IAbstractDto
+    public class ProductDto : ProductRequestDto, IDto
     {
         /// <summary>
         /// Identifier of product.

@@ -10,9 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Catalog.Services.Implementations
 {
-    public abstract class BaseService<T, TDto, TRequestDto> : IAbstractService<T, TDto, TRequestDto>
+    public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
         where T: IRepoEntity 
-        where TDto: IAbstractDto
+        where TDto: IDto
         where TRequestDto: IRequestDto
     {
         private readonly ILogger<BaseService<T, TDto, TRequestDto>> _logger;
@@ -20,7 +20,7 @@ namespace Catalog.Services.Implementations
         private readonly ICachedBaseRepository<T> _repository;
         private readonly string _entityName;
 
-        protected BaseService(ILogger<BaseService<T, TDto, TRequestDto>> logger,
+        public BaseService(ILogger<BaseService<T, TDto, TRequestDto>> logger,
             IMapper mapper,
             ICachedBaseRepository<T> repository)
         {

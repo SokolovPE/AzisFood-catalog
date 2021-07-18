@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using System.Threading.Tasks;
-using AutoMapper;
-using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
 using Catalog.Dto;
 using Catalog.Services.Interfaces;
@@ -15,29 +14,32 @@ namespace Catalog.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ProductController : ControllerBase
+    public abstract class BaseController<T, TDto, TRequestDto> : ControllerBase
+        where T: IRepoEntity 
+        where TDto: IDto
+        where TRequestDto: IRequestDto
     {
-        private readonly ILogger<ProductController> _logger;
-        private readonly IProductService _productService;
+        private readonly ILogger<BaseController<T, TDto, TRequestDto>> _logger;
+        private readonly IService<T, TDto, TRequestDto> _service;
         
-        public ProductController(ILogger<ProductController> logger, IProductService productService)
+        public BaseController(ILogger<BaseController<T, TDto, TRequestDto>> logger, IService<T, TDto, TRequestDto> service)
         {
             _logger = logger;
-            _productService = productService;
+            _service = service;
         }
-
+        
         /// <summary>
-        /// Get all products.
+        /// Get all <see cref="T"/>.
         /// </summary>
-        /// <returns>List of <see cref="Product"/>.</returns>
+        /// <returns>List of <see cref="TDto"/>.</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<ProductDto>>> Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<TDto>>> Get()
         {
             try
             {
-                var data = await _productService.GetAllAsync();
+                var data = await _service.GetAllAsync();
                 return data;
             }
             catch (Exception e)
@@ -46,21 +48,21 @@ namespace Catalog.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
+        
         /// <summary>
-        /// Get product from database by id.
+        /// Get <see cref="T"/> from database by id.
         /// </summary>
-        /// <param name="id">Id of product to get.</param>
+        /// <param name="id">Id of <see cref="T"/> to get.</param>
         /// <returns></returns>
-        [HttpGet("{id:length(24)}", Name = "GetProduct")]
-        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+        [HttpGet("{id:length(24)}", Name = "GetOne")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ProductDto>> Get(string id)
+        public async Task<ActionResult<TDto>> Get(string id)
         {
             try
             {
-                return await _productService.GetByIdAsync(id);
+                return await _service.GetByIdAsync(id);
             }
             catch (KeyNotFoundException e)
             {
@@ -74,21 +76,21 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Create a new product.
+        /// Create a new <see cref="T"/>.
         /// </summary>
-        /// <param name="product">Model of new product.</param>
-        /// <returns>Model of product, created on the database.</returns>
+        /// <param name="item">Model of new <see cref="T"/>.</param>
+        /// <returns>Model of <see cref="T"/>, created on the database.</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<Product>> Create(ProductRequestDto product)
+        public async Task<ActionResult<T>> Create(TRequestDto item)
         {
             try
             {
-                var insertedProduct = await _productService.AddAsync(product);
-                return CreatedAtRoute("GetProduct", new {id = insertedProduct.Id},
-                    insertedProduct);
+                var insertedItem = await _service.AddAsync(item);
+                return CreatedAtRoute("GetOne", new {id = insertedItem.Id},
+                    insertedItem);
             }
             catch (InvalidConstraintException e)
             {
@@ -102,20 +104,20 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Update product in database.
+        /// Update <see cref="T"/> in database.
         /// </summary>
-        /// <param name="id">Identifier of product.</param>
-        /// <param name="productIn">New model of product.</param>
+        /// <param name="id">Identifier of <see cref="T"/>.</param>
+        /// <param name="itemIn">New model of <see cref="T"/>.</param>
         /// <returns>Indicates success or fail of operation.</returns>
         [HttpPut("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(string id, [FromBody] ProductRequestDto productIn)
+        public async Task<IActionResult> Update(string id, [FromBody] TRequestDto itemIn)
         {
             try
             {
-                await _productService.UpdateAsync(id, productIn);
+                await _service.UpdateAsync(id, itemIn);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -130,9 +132,9 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Delete product from database.
+        /// Delete <see cref="T"/> from database.
         /// </summary>
-        /// <param name="id">Identifier of product.</param>
+        /// <param name="id">Identifier of <see cref="T"/>.</param>
         /// <returns>Indicates success or fail of operation.</returns>
         [HttpDelete("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -142,8 +144,8 @@ namespace Catalog.Controllers
         {
             try
             {
-                var product = await _productService.DeleteAsync(id);
-                return Ok($"Successfully deleted {product.Title} [{product.Id}]");
+                var item = await _service.DeleteAsync(id);
+                return Ok($"Successfully deleted [{item.Id}]");
             }
             catch (KeyNotFoundException)
             {
@@ -157,16 +159,16 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Delete product from database.
+        /// Delete <see cref="T"/> from database.
         /// </summary>
-        /// <param name="ids">Array of product identifiers.</param>
+        /// <param name="ids">Array of <see cref="T"/> identifiers.</param>
         /// <returns>Indicates success or fail of operation.</returns>
         [HttpDelete("DeleteMany")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteMany([FromBody] string[] ids)
         {
-            await _productService.DeleteAsync(ids);
-            return Ok($"Successfully deleted {ids.Length} product(s)");
+            await _service.DeleteAsync(ids);
+            return Ok($"Successfully deleted {ids.Length} item(s)");
         }
     }
 }

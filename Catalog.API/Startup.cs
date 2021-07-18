@@ -1,6 +1,7 @@
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
+using Catalog.Dto;
 using Catalog.Extensions;
 using Catalog.Services.Implementations;
 using Catalog.Services.Interfaces;
@@ -85,6 +86,8 @@ namespace Catalog
             // Registrations.
             services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
             services.AddTransient(typeof(ICachedBaseRepository<>), typeof(MongoCachedBaseRepository<>));
+            services.AddTransient(typeof(IService<Ingredient, IngredientDto, IngredientRequestDto>),
+                typeof(BaseService<Ingredient, IngredientDto, IngredientRequestDto>));
             services.AddTransient<IProductService, ProductService>();
         }
 

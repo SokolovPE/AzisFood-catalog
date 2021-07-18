@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
 using Catalog.Worker.Consumers;
-using GreenPipes;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,11 +19,10 @@ namespace Catalog.Worker
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((_, services) =>
                 {
-                    //services.AddHostedService<Worker>();
                     var configBuilder = new ConfigurationBuilder()
                         .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                         .AddJsonFile("appsettings.json");
@@ -47,13 +41,13 @@ namespace Catalog.Worker
                     // Add RabbitMQ MassTransit.
                     services.AddMassTransit(config =>
                     {
-                        config.AddConsumer<CacheProductConsumer>(typeof(CacheProductConsumerDefinition));
+                        config.AddConsumer<BatchCacheConsumer<Product>>(typeof(BatchCacheConsumerDefinition<Product>));
+                        config.AddConsumer<BatchCacheConsumer<Ingredient>>(typeof(BatchCacheConsumerDefinition<Ingredient>));
                         config.UsingRabbitMq((ctx, cfg) =>
                         {
                             cfg.Host(configuration.GetValue<string>("MassTransitOptions:ConnectionString"));
                             cfg.ConfigureEndpoints(ctx);
                         });
-                        //config.AddConsumer<CacheProductConsumer>(typeof(CacheProductConsumerDefinition));
                     });
                     services.AddMassTransitHostedService();
                     services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));

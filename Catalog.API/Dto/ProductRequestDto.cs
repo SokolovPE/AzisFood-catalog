@@ -49,6 +49,5 @@ namespace Catalog.Dto
         /// Options available for product.
         /// </summary>
         public string[] OptionId { get; set; }
-        
     }
 }

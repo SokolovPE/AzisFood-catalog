@@ -3,7 +3,7 @@ using Catalog.Dto;
 
 namespace Catalog.Services.Interfaces
 {
-    public interface IProductService : IAbstractService<Product, ProductDto, ProductRequestDto>
+    public interface IProductService : IService<Product, ProductDto, ProductRequestDto>
     {
     }
 }

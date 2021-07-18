@@ -5,9 +5,9 @@ using Catalog.Dto;
 
 namespace Catalog.Services.Interfaces
 {
-    public interface IAbstractService<T, TDto, in TRequestDto> 
+    public interface IService<T, TDto, in TRequestDto> 
         where T: IRepoEntity 
-        where TDto: IAbstractDto
+        where TDto: IDto
         where TRequestDto: IRequestDto
     {
         /// <summary>
