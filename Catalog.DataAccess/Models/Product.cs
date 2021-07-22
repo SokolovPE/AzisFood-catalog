@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Catalog.DataAccess.Attributes;
 
 namespace Catalog.DataAccess.Models
@@ -7,7 +6,7 @@ namespace Catalog.DataAccess.Models
     /// <summary>
     /// Model of product presented in catalog.
     /// </summary>
-    [BusCacheTopic(Name = "recache.product")]
+    [BusTopic(Name = "product")]
     public class Product : MongoRepoEntity
     {
         /// <summary>

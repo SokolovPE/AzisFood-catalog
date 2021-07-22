@@ -5,7 +5,7 @@ namespace Catalog.DataAccess.Models
     /// <summary>
     /// Model of ingredient.
     /// </summary>
-    [BusCacheTopic(Name = "recache.ingredient")]
+    [BusTopic(Name = "ingredient", Events = new [] {EventType.Deleted, EventType.Recache})]
     public class Ingredient : MongoRepoEntity
     {
         /// <summary>

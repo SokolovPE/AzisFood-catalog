@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
@@ -13,24 +14,24 @@ using MassTransit.Definition;
 
 namespace Catalog.Worker.Consumers
 {
-    public class BatchCacheConsumer<T>  : IConsumer<Batch<CacheSignal>>
+    public class BatchCacheConsumer<T>  : IConsumer<Batch<BusSignal>>
     {
         private readonly ILogger<BatchCacheConsumer<T>> _logger;
         private readonly IRedisCacheService _cacheService;
-        private readonly IBaseRepository<Ingredient> _repository;
-        private const string EntityName = nameof(Ingredient);
+        private readonly IBaseRepository<T> _repository;
+        private static readonly string EntityName = typeof(T).Name;
         private readonly TimeSpan _expiry = TimeSpan.FromDays(1);
 
         public BatchCacheConsumer(ILogger<BatchCacheConsumer<T>> logger,
             IRedisCacheService cacheService,
-            IBaseRepository<Ingredient> repository)
+            IBaseRepository<T> repository)
         {
             _logger = logger;
             _cacheService = cacheService;
             _repository = repository;
         }
         
-        public async Task Consume(ConsumeContext<Batch<CacheSignal>> context)
+        public async Task Consume(ConsumeContext<Batch<BusSignal>> context)
         {
             await _cacheService.RemoveAsync(EntityName);
             var items = await _repository.GetAsync();
@@ -51,17 +52,19 @@ namespace Catalog.Worker.Consumers
         public BatchCacheConsumerDefinition()
         {
             string queueName;
-            var customAttributes = (BusCacheTopic[])typeof(T).GetCustomAttributes(typeof(BusCacheTopic), true);
-            if (customAttributes.Length > 0)
+            var customAttributes = (BusTopic[]) typeof(T).GetCustomAttributes(typeof(BusTopic), true);
+            var busTopic = customAttributes.FirstOrDefault();
+            if (busTopic != null && !string.IsNullOrEmpty(busTopic.Name) &&
+                busTopic.Events.Contains(EventType.Recache))
             {
-                var queueNameAttribute = customAttributes[0];
-                queueName = queueNameAttribute.Name;
+                queueName = busTopic.FullName(EventType.Recache.ToString(), false);
             }
             else
             {
                 throw new CustomAttributeFormatException(
-                    $"Entity {typeof(T).Name} missing {nameof(BusCacheTopic)} attribute");
+                    $"Bus topic is missing or operation Recache is not permitted for {typeof(T).Name}");
             }
+
             Endpoint(x =>
             {
                 x.Name = queueName;
