@@ -3,6 +3,9 @@ using Catalog.DataAccess.Models;
 
 namespace Catalog.Dto
 {
+    /// <summary>
+    /// Request data transfer object for product.
+    /// </summary>
     public class ProductRequestDto : IRequestDto
     {
         /// <summary>

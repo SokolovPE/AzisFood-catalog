@@ -1,3 +1,4 @@
+using System.IO;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
@@ -59,7 +60,12 @@ namespace Catalog
             services.Configure<HttpHandlerDiagnosticOptions>(options =>
                 options.OperationNameResolver =
                     request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog.API", Version = "v1"}); });
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog.API", Version = "v1"});
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, "Catalog.API.xml");
+                c.IncludeXmlComments(filePath);
+            });
             
             // Add MongoDb config.
             services.Configure<MongoOptions>(Configuration.GetSection(nameof(MongoOptions)));
@@ -93,6 +99,11 @@ namespace Catalog
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Configure services
+        /// </summary>
+        /// <param name="app">IApplicationBuilder</param>
+        /// <param name="env">IWebHostEnvironment</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

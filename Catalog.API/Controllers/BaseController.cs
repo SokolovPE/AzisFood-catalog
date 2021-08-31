@@ -12,6 +12,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Catalog.Controllers
 {
+    /// <summary>
+    /// Base implementation of controller.
+    /// </summary>
+    /// <typeparam name="T">Main type.</typeparam>
+    /// <typeparam name="TDto">Dto of main type.</typeparam>
+    /// <typeparam name="TRequestDto">Request Dto of main type.</typeparam>
     [ApiController]
     [Route("api/v1/[controller]")]
     public abstract class BaseController<T, TDto, TRequestDto> : ControllerBase
@@ -22,16 +28,21 @@ namespace Catalog.Controllers
         private readonly ILogger<BaseController<T, TDto, TRequestDto>> _logger;
         private readonly IService<T, TDto, TRequestDto> _service;
         
-        public BaseController(ILogger<BaseController<T, TDto, TRequestDto>> logger, IService<T, TDto, TRequestDto> service)
+        /// <summary>
+        /// Constructs base controller.
+        /// </summary>
+        /// <param name="logger">Logger service.</param>
+        /// <param name="service">Service to work with entity.</param>
+        protected BaseController(ILogger<BaseController<T, TDto, TRequestDto>> logger, IService<T, TDto, TRequestDto> service)
         {
             _logger = logger;
             _service = service;
         }
         
         /// <summary>
-        /// Get all <see cref="T"/>.
+        /// Get all entities.
         /// </summary>
-        /// <returns>List of <see cref="TDto"/>.</returns>
+        /// <returns>List of Dto of entity.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,9 +61,9 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Get <see cref="T"/> from database by id.
+        /// Get entity from database by id.
         /// </summary>
-        /// <param name="id">Id of <see cref="T"/> to get.</param>
+        /// <param name="id">Id of entity to get.</param>
         /// <returns></returns>
         [HttpGet("{id:length(24)}", Name = "GetOne")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -76,10 +87,10 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Create a new <see cref="T"/>.
+        /// Create a new entity.
         /// </summary>
-        /// <param name="item">Model of new <see cref="T"/>.</param>
-        /// <returns>Model of <see cref="T"/>, created on the database.</returns>
+        /// <param name="item">Model of new entity.</param>
+        /// <returns>Model of entity, created on the database.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -104,10 +115,10 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Update <see cref="T"/> in database.
+        /// Update entity in database.
         /// </summary>
-        /// <param name="id">Identifier of <see cref="T"/>.</param>
-        /// <param name="itemIn">New model of <see cref="T"/>.</param>
+        /// <param name="id">Identifier of entity.</param>
+        /// <param name="itemIn">New model of entity.</param>
         /// <returns>Indicates success or fail of operation.</returns>
         [HttpPut("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -132,9 +143,9 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Delete <see cref="T"/> from database.
+        /// Delete entity from database.
         /// </summary>
-        /// <param name="id">Identifier of <see cref="T"/>.</param>
+        /// <param name="id">Identifier of entity.</param>
         /// <returns>Indicates success or fail of operation.</returns>
         [HttpDelete("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -159,9 +170,9 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Delete <see cref="T"/> from database.
+        /// Delete entity from database.
         /// </summary>
-        /// <param name="ids">Array of <see cref="T"/> identifiers.</param>
+        /// <param name="ids">Array of entity identifiers.</param>
         /// <returns>Indicates success or fail of operation.</returns>
         [HttpDelete("DeleteMany")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -1,5 +1,8 @@
 ﻿namespace Catalog.Dto
 {
+    /// <summary>
+    /// Data transfer object for ingredient.
+    /// </summary>
     public class IngredientDto : IngredientRequestDto, IDto
     {
         /// <summary>
