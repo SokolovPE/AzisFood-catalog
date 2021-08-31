@@ -5,7 +5,7 @@ using Catalog.DataAccess.Models;
 namespace Catalog.Services.Interfaces
 {
     /// <summary>
-    /// Service to validate <see cref="T"/>.
+    /// Service to validate entity.
     /// </summary>
     public interface IValidatorService<in T> where  T: IRepoEntity
     {

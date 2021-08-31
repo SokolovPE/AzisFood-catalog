@@ -14,6 +14,10 @@ namespace Catalog.Services.Implementations
     {
         private readonly IService<Ingredient, IngredientDto, IngredientRequestDto> _ingredientService;
 
+        /// <summary>
+        /// Validator of products.
+        /// </summary>
+        /// <param name="ingredientService">Service to operate ingredients.</param>
         public ProductValidatorService(IService<Ingredient, IngredientDto, IngredientRequestDto> ingredientService)
         {
             _ingredientService = ingredientService;

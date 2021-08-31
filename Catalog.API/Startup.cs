@@ -24,16 +24,26 @@ using OpenTracing.Contrib.NetCore.Configuration;
 
 namespace Catalog
 {
+    /// <summary>
+    /// Startup of application.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Constructs startup.
+        /// </summary>
+        /// <param name="configuration">Configuration of application.</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         private IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">Collection of services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();

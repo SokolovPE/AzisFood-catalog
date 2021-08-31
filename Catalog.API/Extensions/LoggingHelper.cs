@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 
@@ -12,6 +11,9 @@ namespace Catalog.Extensions
     /// </summary>
     public static class LoggingHelper
     {
+        /// <summary>
+        /// Configure logging in application
+        /// </summary>
         public static void ConfigureLogging()
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");

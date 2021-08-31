@@ -8,6 +8,9 @@ using StackExchange.Redis;
 namespace Catalog.Extensions
 {
     // TODO: add reference type support
+    /// <summary>
+    /// Extensions to convert entity to HashEntry and back
+    /// </summary>
     public static class HashSetExtensions
     {
         /// <summary>

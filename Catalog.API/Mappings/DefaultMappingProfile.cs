@@ -9,6 +9,9 @@ namespace Catalog.Mappings
     /// </summary>
     public class DefaultMappingProfile : Profile
     {
+        /// <summary>
+        /// Basic mapping profle
+        /// </summary>
         public DefaultMappingProfile()
         {
             #region Product

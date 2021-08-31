@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Catalog.DataAccess.Models;
 
 namespace Catalog.DataAccess.Attributes

@@ -5,50 +5,56 @@ using Catalog.Dto;
 
 namespace Catalog.Services.Interfaces
 {
+    /// <summary>
+    /// Interface of service which operate entity.
+    /// </summary>
+    /// <typeparam name="T">Type of entity.</typeparam>
+    /// <typeparam name="TDto">Type of entity Dto.</typeparam>
+    /// <typeparam name="TRequestDto">Type of entity request Dto</typeparam>
     public interface IService<T, TDto, in TRequestDto> 
         where T: IRepoEntity 
         where TDto: IDto
         where TRequestDto: IRequestDto
     {
         /// <summary>
-        /// Get all <see cref="T"/> presented in catalog.
+        /// Get all entities presented in catalog.
         /// </summary>
-        /// <returns>List of <see cref="T"/></returns>
+        /// <returns>List of entities.</returns>
         Task<List<TDto>> GetAllAsync();
 
         /// <summary>
-        /// Get <see cref="T"/> from catalog by id.
+        /// Get entities from catalog by id.
         /// </summary>
-        /// <param name="id">Identifier of <see cref="T"/>.</param>
-        /// <returns>Instance of <see cref="TDto"/>.</returns>
+        /// <param name="id">Identifier of entity.</param>
+        /// <returns>Instance of entity.</returns>
         Task<TDto> GetByIdAsync(string id);
 
         /// <summary>
-        /// Add new <see cref="T"/> to catalog.
+        /// Add new entity to catalog.
         /// </summary>
-        /// <param name="product"><see cref="T"/> to add.</param>
+        /// <param name="product">Entity to add.</param>
         /// <returns>Insertion result.</returns>
         Task<TDto> AddAsync(TRequestDto product);
 
         /// <summary>
-        /// Update <see cref="T"/> in catalog.
+        /// Update entity in catalog.
         /// </summary>
-        /// <param name="id">Identifier of <see cref="T"/> to be updated.</param>
-        /// <param name="product"><see cref="T"/> to be updated.</param>
+        /// <param name="id">Identifier of entity to be updated.</param>
+        /// <param name="product">Entity to be updated.</param>
         /// <returns>Insertion result.</returns>
         Task UpdateAsync(string id, TRequestDto product);
 
         /// <summary>
-        /// Delete <see cref="T"/> from catalog.
+        /// Delete entity from catalog.
         /// </summary>
-        /// <param name="id">Identifier of <see cref="T"/> to be deleted.</param>
+        /// <param name="id">Identifier of entity to be deleted.</param>
         /// <returns>Deletion result.</returns>
         Task<T> DeleteAsync(string id);
 
         /// <summary>
-        /// Delete <see cref="T"/> from catalog.
+        /// Delete entities from catalog.
         /// </summary>
-        /// <param name="ids">Array with identifiers of <see cref="T"/> to be deleted.</param>
+        /// <param name="ids">Array with identifiers of entities to be deleted.</param>
         /// <returns>Deletion result.</returns>
         Task DeleteAsync(string[] ids);
         

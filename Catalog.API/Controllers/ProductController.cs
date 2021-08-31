@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Threading.Tasks;
-using AutoMapper;
-using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
 using Catalog.Dto;
 using Catalog.Services.Interfaces;
@@ -14,13 +12,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Catalog.Controllers
 {
+    /// <summary>
+    /// Controller to operate products
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> _logger;
         private readonly IProductService _productService;
-        
+
+        /// <inheritdoc />
         public ProductController(ILogger<ProductController> logger, IProductService productService)
         {
             _logger = logger;

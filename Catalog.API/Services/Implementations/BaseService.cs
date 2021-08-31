@@ -10,16 +10,43 @@ using Microsoft.Extensions.Logging;
 
 namespace Catalog.Services.Implementations
 {
+    /// <summary>
+    /// Basic service to operate entity.
+    /// </summary>
+    /// <typeparam name="T">Type of entity.</typeparam>
+    /// <typeparam name="TDto">Type of entity Dto.</typeparam>
+    /// <typeparam name="TRequestDto">Type of entity request Dto.</typeparam>
     public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
         where T: IRepoEntity 
         where TDto: IDto
         where TRequestDto: IRequestDto
     {
+        /// <summary>
+        /// Logger service.
+        /// </summary>
         protected readonly ILogger<BaseService<T, TDto, TRequestDto>> Logger;
+        
+        /// <summary>
+        /// Automapper.
+        /// </summary>
         protected readonly IMapper Mapper;
+        
+        /// <summary>
+        /// Entity repository.
+        /// </summary>
         protected readonly ICachedBaseRepository<T> Repository;
+        
+        /// <summary>
+        /// Name of entity.
+        /// </summary>
         protected readonly string EntityName;
 
+        /// <summary>
+        /// Constructs BaseService.
+        /// </summary>
+        /// <param name="logger">Logger service.</param>
+        /// <param name="mapper">Automapper.</param>
+        /// <param name="repository">Entity repository.</param>
         public BaseService(ILogger<BaseService<T, TDto, TRequestDto>> logger,
             IMapper mapper,
             ICachedBaseRepository<T> repository)
@@ -30,6 +57,10 @@ namespace Catalog.Services.Implementations
             EntityName = typeof(T).Name;
         }
         
+        /// <summary>
+        /// Get whole collection of entity.
+        /// </summary>
+        /// <returns>List of element dto.</returns>
         public virtual async Task<List<TDto>> GetAllAsync()
         {
             try
@@ -44,6 +75,12 @@ namespace Catalog.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Get single element from entity collection by id.
+        /// </summary>
+        /// <param name="id">Identifier of element.</param>
+        /// <returns>Dto of element.</returns>
+        /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection.</exception>
         public virtual async Task<TDto> GetByIdAsync(string id)
         {
             var item = await Repository.GetAsync(id);
@@ -55,6 +92,11 @@ namespace Catalog.Services.Implementations
             throw new KeyNotFoundException(msg);
         }
 
+        /// <summary>
+        /// Append item to entity collection.
+        /// </summary>
+        /// <param name="item">Item to append.</param>
+        /// <returns>Dto of added item.</returns>
         public virtual async Task<TDto> AddAsync(TRequestDto item)
         {
             try
@@ -70,6 +112,12 @@ namespace Catalog.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Update element of entity collection by id.
+        /// </summary>
+        /// <param name="id">Identifier of element.</param>
+        /// <param name="item">New value.</param>
+        /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection.</exception>
         public virtual async Task UpdateAsync(string id, TRequestDto item)
         {
             var itemFromDb = await Repository.GetAsync(id);
@@ -85,6 +133,12 @@ namespace Catalog.Services.Implementations
             await Repository.UpdateAsync(id, itemUpdated);
         }
 
+        /// <summary>
+        /// Delete element from entity collection by id.
+        /// </summary>
+        /// <param name="id">Identifier of element.</param>
+        /// <returns>Deletion result.</returns>
+        /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection.</exception>
         public virtual async Task<T> DeleteAsync(string id)
         {
             var item = await Repository.GetAsync(id);
@@ -99,6 +153,10 @@ namespace Catalog.Services.Implementations
             return item;
         }
 
+        /// <summary>
+        /// Delete multiple elements from entity collection by id.
+        /// </summary>
+        /// <param name="ids">Array of identifiers.</param>
         public virtual async Task DeleteAsync(string[] ids)
         {
             if (ids.Length > 0) await Repository.RemoveManyAsync(ids);

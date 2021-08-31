@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,9 +10,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Catalog.Services.Implementations
 {
+    /// <summary>
+    /// Service to operate products.
+    /// </summary>
     public class ProductService : BaseService<Product, ProductDto, ProductRequestDto>, IProductService
     {
         private readonly IValidatorService<Product> _validator;
+
+        /// <inheritdoc />
         public ProductService(ILogger<ProductService> logger,
             IMapper mapper,
             ICachedBaseRepository<Product> repository,
@@ -23,6 +27,7 @@ namespace Catalog.Services.Implementations
             _validator = validator;
         }
 
+        /// <inheritdoc />
         public override async Task<ProductDto> AddAsync(ProductRequestDto item)
         {
             try
