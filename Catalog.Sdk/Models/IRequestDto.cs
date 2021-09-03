@@ -1,4 +1,4 @@
-﻿namespace Catalog.Dto
+﻿namespace Catalog.Sdk.Models
 {
     /// <summary>
     /// Interface of basic request data transfer object

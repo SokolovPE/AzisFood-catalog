@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Catalog.DataAccess.Models;
 
-namespace Catalog.Services.Interfaces
+namespace Catalog.Core.Services.Interfaces
 {
     /// <summary>
     /// Service to validate entity.

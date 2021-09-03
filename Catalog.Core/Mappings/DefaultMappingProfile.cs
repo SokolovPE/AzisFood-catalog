@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Catalog.DataAccess.Models;
-using Catalog.Dto;
 using Catalog.Sdk.Models;
 
-namespace Catalog.Mappings
+namespace Catalog.Core.Mappings
 {
     /// <summary>
     /// Default mapping profile.

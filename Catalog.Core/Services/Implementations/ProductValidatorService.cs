@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalog.Core.Services.Interfaces;
 using Catalog.DataAccess.Models;
-using Catalog.Dto;
-using Catalog.Services.Interfaces;
+using Catalog.Sdk.Models;
 
-namespace Catalog.Services.Implementations
+namespace Catalog.Core.Services.Implementations
 {
     /// <summary>
     /// Service to validate product.

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Catalog.Core.Services.Interfaces;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
-using Catalog.Dto;
-using Catalog.Services.Interfaces;
+using Catalog.Sdk.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Catalog.Services.Implementations
+namespace Catalog.Core.Services.Implementations
 {
     /// <summary>
     /// Basic service to operate entity.

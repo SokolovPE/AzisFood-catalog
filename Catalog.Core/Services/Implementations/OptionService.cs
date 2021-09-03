@@ -1,4 +1,4 @@
-﻿namespace Catalog.Services.Implementations
+﻿namespace Catalog.Core.Services.Implementations
 {
     /// <summary>
     /// Service to operate options.

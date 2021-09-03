@@ -1,11 +1,11 @@
 using System.IO;
+using Catalog.Core.Services.Implementations;
+using Catalog.Core.Services.Interfaces;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
-using Catalog.Dto;
 using Catalog.Extensions;
-using Catalog.Services.Implementations;
-using Catalog.Services.Interfaces;
+using Catalog.Sdk.Models;
 using Jaeger;
 using Jaeger.Reporters;
 using Jaeger.Samplers;

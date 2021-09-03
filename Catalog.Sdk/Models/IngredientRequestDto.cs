@@ -1,4 +1,4 @@
-﻿namespace Catalog.Dto
+﻿namespace Catalog.Sdk.Models
 {
     /// <summary>
     /// Request data transfer object for ingredient.

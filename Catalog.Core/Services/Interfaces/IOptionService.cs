@@ -1,4 +1,4 @@
-﻿namespace Catalog.Services.Interfaces
+﻿namespace Catalog.Core.Services.Interfaces
 {
     /// <summary>
     /// Interface of option service.

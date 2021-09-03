@@ -1,6 +1,6 @@
-﻿using Catalog.DataAccess.Models;
-using Catalog.Dto;
-using Catalog.Services.Interfaces;
+﻿using Catalog.Core.Services.Interfaces;
+using Catalog.DataAccess.Models;
+using Catalog.Sdk.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Catalog.Controllers

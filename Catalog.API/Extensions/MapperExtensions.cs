@@ -1,4 +1,4 @@
-﻿using Catalog.Mappings;
+﻿using Catalog.Core.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Catalog.Extensions

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalog.DataAccess.Models;
-using Catalog.Dto;
+using Catalog.Sdk.Models;
 
-namespace Catalog.Services.Interfaces
+namespace Catalog.Core.Services.Interfaces
 {
     /// <summary>
     /// Interface of service which operate entity.

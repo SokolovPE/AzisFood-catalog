@@ -1,5 +1,3 @@
-using Catalog.Dto;
-
 namespace Catalog.Sdk.Models
 {
     public class NutritionFactDto

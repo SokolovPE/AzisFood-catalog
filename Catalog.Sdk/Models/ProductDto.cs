@@ -1,6 +1,4 @@
-﻿using Catalog.Sdk.Models;
-
-namespace Catalog.Dto
+﻿namespace Catalog.Sdk.Models
 {
     /// <summary>
     /// Data transfer object for product.
