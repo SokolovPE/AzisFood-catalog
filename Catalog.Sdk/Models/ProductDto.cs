@@ -1,4 +1,4 @@
-﻿using Catalog.DataAccess.Models;
+﻿using Catalog.Sdk.Models;
 
 namespace Catalog.Dto
 {
@@ -15,13 +15,13 @@ namespace Catalog.Dto
         /// <summary>
         /// Nutrition facts for serving size of product.
         /// </summary>
-        public NutritionFact TotalNutritionFact
+        public NutritionFactDto TotalNutritionFact
         {
             get
             {
                 // TotalWeight(g) / 100(g) and then multiply nutrition fact values.
                 var multiplier = ServingSize / 100;
-                return new NutritionFact
+                return new NutritionFactDto
                 {
                     Calories = NutritionFact.Calories * multiplier,
                     Carbohydrates = NutritionFact.Carbohydrates * multiplier,

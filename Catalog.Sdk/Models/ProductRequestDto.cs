@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Catalog.DataAccess.Models;
+using Catalog.Sdk.Models;
 
 namespace Catalog.Dto
 {
@@ -36,7 +36,7 @@ namespace Catalog.Dto
         /// <summary>
         /// Nutrition facts of this product.
         /// </summary>
-        public NutritionFact NutritionFact { get; set; }
+        public NutritionFactDto NutritionFact { get; set; }
         
         /// <summary>
         /// Total weight of product.
@@ -46,7 +46,7 @@ namespace Catalog.Dto
         /// <summary>
         /// Ingredients product made of.
         /// </summary>
-        public IEnumerable<IngredientUsage> Ingredients { get; set; }
+        public IEnumerable<IngredientUsageDto> Ingredients { get; set; }
         
         /// <summary>
         /// Options available for product.

@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Worker", "Catalog.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.DataAccess", "Catalog.DataAccess\Catalog.DataAccess.csproj", "{282EEFE2-13BA-4585-B04F-946495B87643}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Core", "Catalog.Core\Catalog.Core.csproj", "{ABC4D16A-93BF-4027-B2D3-30B49FD15E05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Sdk", "Catalog.Sdk\Catalog.Sdk.csproj", "{EC2EC213-820E-4F55-A636-67FEEAA7FC03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{282EEFE2-13BA-4585-B04F-946495B87643}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{282EEFE2-13BA-4585-B04F-946495B87643}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{282EEFE2-13BA-4585-B04F-946495B87643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC4D16A-93BF-4027-B2D3-30B49FD15E05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC4D16A-93BF-4027-B2D3-30B49FD15E05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC4D16A-93BF-4027-B2D3-30B49FD15E05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC4D16A-93BF-4027-B2D3-30B49FD15E05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2EC213-820E-4F55-A636-67FEEAA7FC03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2EC213-820E-4F55-A636-67FEEAA7FC03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2EC213-820E-4F55-A636-67FEEAA7FC03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2EC213-820E-4F55-A636-67FEEAA7FC03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

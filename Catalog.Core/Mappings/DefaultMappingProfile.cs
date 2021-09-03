@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Catalog.DataAccess.Models;
 using Catalog.Dto;
+using Catalog.Sdk.Models;
 
 namespace Catalog.Mappings
 {
@@ -24,6 +25,11 @@ namespace Catalog.Mappings
             CreateMap<Ingredient, IngredientDto>().ReverseMap();
             CreateMap<Ingredient, IngredientRequestDto>().ReverseMap();
             CreateMap<IngredientDto, IngredientRequestDto>().ReverseMap();
+            #endregion
+
+            #region Others
+            CreateMap<NutritionFact, NutritionFactDto>().ReverseMap();
+            CreateMap<IngredientUsage, IngredientUsageDto>().ReverseMap();
             #endregion
         }
     }
