@@ -37,12 +37,17 @@ namespace Catalog.Worker
                     services.Configure<MongoOptions>(configuration.GetSection(nameof(MongoOptions)));
                     services.AddSingleton<IMongoOptions>(sp =>
                         sp.GetRequiredService<IOptions<MongoOptions>>().Value);
-                    
+
+                    services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
+                    services.AddTransient(typeof(ICacheOperator<>), typeof(CacheOperator<>));
                     // Add RabbitMQ MassTransit.
                     services.AddMassTransit(config =>
                     {
-                        config.AddConsumer<BatchCacheConsumer<Product>>(typeof(BatchCacheConsumerDefinition<Product>));
-                        config.AddConsumer<BatchCacheConsumer<Ingredient>>(typeof(BatchCacheConsumerDefinition<Ingredient>));
+                        // Add consumers and re-cache entities.
+                        var tempServiceProvider = services.BuildServiceProvider();
+                        config.AddConsumer<Product>(tempServiceProvider);
+                        config.AddConsumer<Ingredient>(tempServiceProvider);
+                        
                         config.UsingRabbitMq((ctx, cfg) =>
                         {
                             cfg.Host(configuration.GetValue<string>("MassTransitOptions:ConnectionString"));
@@ -50,7 +55,6 @@ namespace Catalog.Worker
                         });
                     });
                     services.AddMassTransitHostedService();
-                    services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
                 });
     }
 }

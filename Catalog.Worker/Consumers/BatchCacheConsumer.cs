@@ -16,34 +16,17 @@ namespace Catalog.Worker.Consumers
 {
     public class BatchCacheConsumer<T>  : IConsumer<Batch<BusSignal>>
     {
-        private readonly ILogger<BatchCacheConsumer<T>> _logger;
-        private readonly IRedisCacheService _cacheService;
-        private readonly IBaseRepository<T> _repository;
-        private static readonly string EntityName = typeof(T).Name;
+        private readonly ICacheOperator<T> _cacheOperator;
         private readonly TimeSpan _expiry = TimeSpan.FromDays(1);
 
-        public BatchCacheConsumer(ILogger<BatchCacheConsumer<T>> logger,
-            IRedisCacheService cacheService,
-            IBaseRepository<T> repository)
+        public BatchCacheConsumer(
+            ICacheOperator<T> cacheOperator)
         {
-            _logger = logger;
-            _cacheService = cacheService;
-            _repository = repository;
+            _cacheOperator = cacheOperator;
         }
-        
-        public async Task Consume(ConsumeContext<Batch<BusSignal>> context)
-        {
-            await _cacheService.RemoveAsync(EntityName);
-            var items = await _repository.GetAsync();
-            var cacheSetResult = await _cacheService.SetAsync(EntityName, items, _expiry, CommandFlags.None);
-            if (!cacheSetResult)
-            {
-                _logger.LogWarning($"Unable to refresh {EntityName} cache");
-                throw new Exception($"Unable to refresh {EntityName} cache");
-            }
 
-            _logger.LogInformation($"Successfully refreshed {EntityName} cache");
-        }
+        public async Task Consume(ConsumeContext<Batch<BusSignal>> context) =>
+            await _cacheOperator.FullRecache(_expiry);
     }
     
     public class BatchCacheConsumerDefinition<T> :
