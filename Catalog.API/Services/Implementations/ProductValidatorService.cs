@@ -42,8 +42,9 @@ namespace Catalog.Services.Implementations
             }
             
             var ingredientIds = item.Ingredients.Select(x => x.IngredientId);
-            var result = !items.Select(x => x.Id).Except(ingredientIds).Any();
-            return new Tuple<bool, string>(result, result?string.Empty:"Some of listed ingredients are not presented at server");
+            var result = !ingredientIds.Except(items.Select(x=>x.Id)).Any();
+            return new Tuple<bool, string>(result,
+                result ? string.Empty : "Some of listed ingredients are not presented at server");
         }
     }
 }

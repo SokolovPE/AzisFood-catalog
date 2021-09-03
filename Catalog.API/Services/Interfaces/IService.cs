@@ -57,6 +57,5 @@ namespace Catalog.Services.Interfaces
         /// <param name="ids">Array with identifiers of entities to be deleted.</param>
         /// <returns>Deletion result.</returns>
         Task DeleteAsync(string[] ids);
-        
     }
 }
