@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 namespace Catalog.DataAccess.Interfaces
 {
     /// <summary>
-    /// Perform operations with cache for entity.
+    /// Perform operations with cache for entity
     /// </summary>
-    /// <typeparam name="T">Tpe of entity.</typeparam>
+    /// <typeparam name="T">Tpe of entity</typeparam>
     public interface ICacheOperator<T>
     {
         /// <summary>
-        /// Fully refresh cache of entity.
+        /// Fully refresh cache of entity
         /// </summary>
-        /// <param name="expiry">Key expiration time.</param>
+        /// <param name="expiry">Key expiration time</param>
         Task FullRecache(TimeSpan expiry);
     }
 }

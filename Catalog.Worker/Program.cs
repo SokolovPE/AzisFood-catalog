@@ -3,6 +3,7 @@ using System.Reflection;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
+using Catalog.Extensions;
 using Catalog.Worker.Consumers;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -28,25 +29,31 @@ namespace Catalog.Worker
                         .AddJsonFile("appsettings.json");
                     var configuration = configBuilder.Build();
                     
-                    // Add Redis config.
+                    // Add Redis config
                     services.Configure<RedisOptions>(configuration.GetSection(nameof(RedisOptions)));
                     services.AddSingleton<IRedisOptions>(sp =>
                         sp.GetRequiredService<IOptions<RedisOptions>>().Value);
                     services.AddSingleton<IRedisCacheService, RedisCacheService>();
-                    // Add MongoDb config.
+                    // Add MongoDb config
                     services.Configure<MongoOptions>(configuration.GetSection(nameof(MongoOptions)));
                     services.AddSingleton<IMongoOptions>(sp =>
                         sp.GetRequiredService<IOptions<MongoOptions>>().Value);
 
-                    services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
-                    services.AddTransient(typeof(ICacheOperator<>), typeof(CacheOperator<>));
-                    // Add RabbitMQ MassTransit.
+                    // Register mappings
+                    services.AddMapper();
+                    
+                    // Registrations
+                    services.AddCoreServices();
+                    
+                    // Add RabbitMQ MassTransit
                     services.AddMassTransit(config =>
                     {
-                        // Add consumers and re-cache entities.
+                        // Add consumers and re-cache entities
                         var tempServiceProvider = services.BuildServiceProvider();
                         config.AddConsumer<Product>(tempServiceProvider);
                         config.AddConsumer<Ingredient>(tempServiceProvider);
+                        config.AddConsumer<IngredientDeleteBatchConsumer>(
+                            typeof(IngredientDeleteBatchConsumerDefinition));
                         
                         config.UsingRabbitMq((ctx, cfg) =>
                         {

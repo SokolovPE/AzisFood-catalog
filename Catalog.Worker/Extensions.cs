@@ -9,9 +9,9 @@ namespace Catalog.Worker
     public static class Extensions
     {
         /// <summary>
-        /// Adds consumer to MassTransit and refreshes cache of entity.
+        /// Adds consumer to MassTransit and refreshes cache of entity
         /// </summary>
-        /// <typeparam name="T">Type of entity.</typeparam>
+        /// <typeparam name="T">Type of entity</typeparam>
         public static void AddConsumer<T>(
             this IServiceCollectionBusConfigurator configurator, IServiceProvider serviceProvider)
         {

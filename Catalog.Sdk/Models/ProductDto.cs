@@ -1,23 +1,23 @@
 ﻿namespace Catalog.Sdk.Models
 {
     /// <summary>
-    /// Data transfer object for product.
+    /// Data transfer object for product
     /// </summary>
     public class ProductDto : ProductRequestDto, IDto
     {
         /// <summary>
-        /// Identifier of product.
+        /// Identifier of product
         /// </summary>
         public string Id { get; set; }
         
         /// <summary>
-        /// Nutrition facts for serving size of product.
+        /// Nutrition facts for serving size of product
         /// </summary>
         public NutritionFactDto TotalNutritionFact
         {
             get
             {
-                // TotalWeight(g) / 100(g) and then multiply nutrition fact values.
+                // TotalWeight(g) / 100(g) and then multiply nutrition fact values
                 var multiplier = ServingSize / 100;
                 return new NutritionFactDto
                 {

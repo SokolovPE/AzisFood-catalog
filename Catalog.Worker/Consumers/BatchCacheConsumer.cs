@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
 using MassTransit;
-using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 using System.Reflection;
 using Catalog.DataAccess.Attributes;
 using GreenPipes;

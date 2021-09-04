@@ -1,22 +1,22 @@
 ﻿namespace Catalog.DataAccess.Models
 {
     /// <summary>
-    /// Model of product option.
+    /// Model of product option
     /// </summary>
     public class Option : MongoRepoEntity
     {
         /// <summary>
-        /// Title of option.
+        /// Title of option
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Url of image cover.
+        /// Url of image cover
         /// </summary>
         public string ImageUrl { get; set; }
         
         /// <summary>
-        /// Price of option.
+        /// Price of option
         /// </summary>
         public decimal Price { get; set; }
     }

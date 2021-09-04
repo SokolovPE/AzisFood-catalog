@@ -5,7 +5,7 @@ using Catalog.Sdk.Models;
 namespace Catalog.Core.Mappings
 {
     /// <summary>
-    /// Default mapping profile.
+    /// Default mapping profile
     /// </summary>
     public class DefaultMappingProfile : Profile
     {

@@ -8,26 +8,26 @@ using Catalog.Sdk.Models;
 namespace Catalog.Core.Services.Implementations
 {
     /// <summary>
-    /// Service to validate product.
+    /// Service to validate product
     /// </summary>
     public class ProductValidatorService : IValidatorService<Product>
     {
         private readonly IService<Ingredient, IngredientDto, IngredientRequestDto> _ingredientService;
 
         /// <summary>
-        /// Validator of products.
+        /// Validator of products
         /// </summary>
-        /// <param name="ingredientService">Service to operate ingredients.</param>
+        /// <param name="ingredientService">Service to operate ingredients</param>
         public ProductValidatorService(IService<Ingredient, IngredientDto, IngredientRequestDto> ingredientService)
         {
             _ingredientService = ingredientService;
         }
 
         /// <summary>
-        /// Validate object for errors.
+        /// Validate object for errors
         /// </summary>
-        /// <param name="item">Object to validate.</param>
-        /// <returns>Validation result.</returns>
+        /// <param name="item">Object to validate</param>
+        /// <returns>Validation result</returns>
         public async Task<Tuple<bool, string>> Validate(Product item)
         {
             if (item.ServingSize <= 0)

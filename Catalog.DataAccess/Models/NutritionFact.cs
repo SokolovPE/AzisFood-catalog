@@ -4,33 +4,33 @@ using Newtonsoft.Json;
 namespace Catalog.DataAccess.Models
 {
     /// <summary>
-    /// Product nutrition facts per 100g.
+    /// Product nutrition facts per 100g
     /// </summary>
     public class NutritionFact : MongoRepoEntity
     {
         /// <summary>
-        /// Hide original id from entity.
+        /// Hide original id from entity
         /// </summary>
         [BsonIgnore]
         [JsonIgnore]
         internal new string Id { get; set; }
         
-        // Energy in kJoules.
+        // Energy in kJoules
         public double Energy { get; set; }
         
-        // Calories in kCal.
+        // Calories in kCal
         public double Calories { get; set; }
         
-        // Fat amount.
+        // Fat amount
         public double TotalFat { get; set; }
         
-        // Carbohydrates amount.
+        // Carbohydrates amount
         public double Carbohydrates { get; set; }
         
-        // Protein amount.
+        // Protein amount
         public double Proteins { get; set; }
         
-        // Sugar amount.
+        // Sugar amount
         public double TotalSugar { get; set; }
     }
 }

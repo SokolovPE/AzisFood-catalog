@@ -30,9 +30,9 @@ namespace Catalog.Controllers
         }
 
         /// <summary>
-        /// Get all products.
+        /// Get all products
         /// </summary>
-        /// <returns>List of <see cref="Product"/>.</returns>
+        /// <returns>List of <see cref="Product"/></returns>
         [HttpGet]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -51,9 +51,9 @@ namespace Catalog.Controllers
         }
 
         /// <summary>
-        /// Get product from database by id.
+        /// Get product from database by id
         /// </summary>
-        /// <param name="id">Id of product to get.</param>
+        /// <param name="id">Id of product to get</param>
         /// <returns></returns>
         [HttpGet("{id:length(24)}", Name = "GetProduct")]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
@@ -77,10 +77,10 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Create a new product.
+        /// Create a new product
         /// </summary>
-        /// <param name="product">Model of new product.</param>
-        /// <returns>Model of product, created on the database.</returns>
+        /// <param name="product">Model of new product</param>
+        /// <returns>Model of product, created on the database</returns>
         [HttpPost]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -110,11 +110,11 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Update product in database.
+        /// Update product in database
         /// </summary>
-        /// <param name="id">Identifier of product.</param>
-        /// <param name="productIn">New model of product.</param>
-        /// <returns>Indicates success or fail of operation.</returns>
+        /// <param name="id">Identifier of product</param>
+        /// <param name="productIn">New model of product</param>
+        /// <returns>Indicates success or fail of operation</returns>
         [HttpPut("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -138,10 +138,10 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Delete product from database.
+        /// Delete product from database
         /// </summary>
-        /// <param name="id">Identifier of product.</param>
-        /// <returns>Indicates success or fail of operation.</returns>
+        /// <param name="id">Identifier of product</param>
+        /// <returns>Indicates success or fail of operation</returns>
         [HttpDelete("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -165,10 +165,10 @@ namespace Catalog.Controllers
         }
         
         /// <summary>
-        /// Delete product from database.
+        /// Delete product from database
         /// </summary>
-        /// <param name="ids">Array of product identifiers.</param>
-        /// <returns>Indicates success or fail of operation.</returns>
+        /// <param name="ids">Array of product identifiers</param>
+        /// <returns>Indicates success or fail of operation</returns>
         [HttpDelete("DeleteMany")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteMany([FromBody] string[] ids)

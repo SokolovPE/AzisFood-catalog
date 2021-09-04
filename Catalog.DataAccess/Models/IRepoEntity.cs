@@ -1,7 +1,7 @@
 ﻿namespace Catalog.DataAccess.Models
 {
     /// <summary>
-    /// Abstract repository entity.
+    /// Abstract repository entity
     /// </summary>
     public interface IRepoEntity
     {

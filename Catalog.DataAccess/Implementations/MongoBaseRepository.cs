@@ -32,7 +32,7 @@ namespace Catalog.DataAccess.Implementations
 
         public async Task<TRepoEntity> CreateAsync(TRepoEntity item)
         {
-            // Assign unique id.
+            // Assign unique id
             item.Id = ObjectId.GenerateNewId().ToString();
             await Items.InsertOneAsync(item);
             return item;

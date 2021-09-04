@@ -1,11 +1,7 @@
 using System.IO;
-using Catalog.Core.Services.Implementations;
-using Catalog.Core.Services.Interfaces;
 using Catalog.DataAccess.Implementations;
 using Catalog.DataAccess.Interfaces;
-using Catalog.DataAccess.Models;
 using Catalog.Extensions;
-using Catalog.Sdk.Models;
 using Jaeger;
 using Jaeger.Reporters;
 using Jaeger.Samplers;
@@ -25,14 +21,14 @@ using OpenTracing.Contrib.NetCore.Configuration;
 namespace Catalog
 {
     /// <summary>
-    /// Startup of application.
+    /// Startup of application
     /// </summary>
     public class Startup
     {
         /// <summary>
-        /// Constructs startup.
+        /// Constructs startup
         /// </summary>
-        /// <param name="configuration">Configuration of application.</param>
+        /// <param name="configuration">Configuration of application</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -41,17 +37,17 @@ namespace Catalog
         private IConfiguration Configuration { get; }
         
         /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// This method gets called by the runtime. Use this method to add services to the container
         /// </summary>
-        /// <param name="services">Collection of services.</param>
+        /// <param name="services">Collection of services</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             
-            // Register mappings.
+            // Register mappings
             services.AddMapper();
             
-            // Add open tracing with Jaeger.
+            // Add open tracing with Jaeger
             services.AddOpenTracing();
             services.AddSingleton<ITracer>(sp =>
             {
@@ -60,9 +56,9 @@ namespace Catalog
                 var reporter = new RemoteReporter.Builder().WithLoggerFactory(loggerFactory).WithSender(new UdpSender())
                     .Build();
                 var tracer = new Tracer.Builder(serviceName)
-                    // The constant sampler reports every span.
+                    // The constant sampler reports every span
                     .WithSampler(new ConstSampler(true))
-                    // LoggingReporter prints every reported span to the logging framework.
+                    // LoggingReporter prints every reported span to the logging framework
                     .WithReporter(reporter)
                     .Build();
                 return tracer;
@@ -77,18 +73,18 @@ namespace Catalog
                 c.IncludeXmlComments(filePath);
             });
             
-            // Add MongoDb config.
+            // Add MongoDb config
             services.Configure<MongoOptions>(Configuration.GetSection(nameof(MongoOptions)));
             services.AddSingleton<IMongoOptions>(sp =>
                 sp.GetRequiredService<IOptions<MongoOptions>>().Value);
             
-            // Add Redis config.
+            // Add Redis config
             services.Configure<RedisOptions>(Configuration.GetSection(nameof(RedisOptions)));
             services.AddSingleton<IRedisOptions>(sp =>
                 sp.GetRequiredService<IOptions<RedisOptions>>().Value);
             services.AddSingleton<IRedisCacheService, RedisCacheService>();
             
-            // Add RabbitMQ MassTransit.
+            // Add RabbitMQ MassTransit
             services.AddMassTransit(config =>
             {
                 config.UsingRabbitMq((_, cfg) =>
@@ -99,16 +95,11 @@ namespace Catalog
             });
             services.AddMassTransitHostedService();
             
-            // Registrations.
-            services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
-            services.AddTransient(typeof(ICachedBaseRepository<>), typeof(MongoCachedBaseRepository<>));
-            services.AddTransient(typeof(IService<Ingredient, IngredientDto, IngredientRequestDto>),
-                typeof(BaseService<Ingredient, IngredientDto, IngredientRequestDto>));
-            services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<IValidatorService<Product>, ProductValidatorService>();
+            // Registrations
+            services.AddCoreServices();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         /// <summary>
         /// Configure services
         /// </summary>

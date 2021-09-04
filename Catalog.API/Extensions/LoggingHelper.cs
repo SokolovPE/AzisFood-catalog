@@ -7,7 +7,7 @@ using Serilog.Sinks.Elasticsearch;
 namespace Catalog.Extensions
 {
     /// <summary>
-    /// Helper with logging.
+    /// Helper with logging
     /// </summary>
     public static class LoggingHelper
     {

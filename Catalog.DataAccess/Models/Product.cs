@@ -4,53 +4,53 @@ using Catalog.DataAccess.Attributes;
 namespace Catalog.DataAccess.Models
 {
     /// <summary>
-    /// Model of product presented in catalog.
+    /// Model of product presented in catalog
     /// </summary>
     [BusTopic(Name = "product")]
     public class Product : MongoRepoEntity
     {
         /// <summary>
-        /// Title of product.
+        /// Title of product
         /// </summary>
         public string Title { get; set; }
         
         /// <summary>
-        /// Description of product.
+        /// Description of product
         /// </summary>
         public string Description { get; set; }
         
         /// <summary>
-        /// Url of image cover.
+        /// Url of image cover
         /// </summary>
         public string ImageUrl { get; set; }
         
         /// <summary>
-        /// Price of product.
+        /// Price of product
         /// </summary>
         public decimal Price { get; set; }
         
         /// <summary>
-        /// Categories where product is presented.
+        /// Categories where product is presented
         /// </summary>
         public string[] CategoryId { get; set; }
         
         /// <summary>
-        /// Nutrition facts for 100g of product.
+        /// Nutrition facts for 100g of product
         /// </summary>
         public NutritionFact NutritionFact { get; set; }
         
         /// <summary>
-        /// Total weight of product.
+        /// Total weight of product
         /// </summary>
         public double ServingSize { get; set; }
         
         /// <summary>
-        /// Ingredients product made of.
+        /// Ingredients product made of
         /// </summary>
         public IEnumerable<IngredientUsage> Ingredients { get; set; }
         
         /// <summary>
-        /// Options available for product.
+        /// Options available for product
         /// </summary>
         public string[] OptionId { get; set; }
     }

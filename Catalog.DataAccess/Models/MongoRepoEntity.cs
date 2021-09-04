@@ -6,7 +6,7 @@ namespace Catalog.DataAccess.Models
     public abstract class MongoRepoEntity : IRepoEntity
     {
         /// <summary>
-        /// Identifier.
+        /// Identifier
         /// </summary>
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

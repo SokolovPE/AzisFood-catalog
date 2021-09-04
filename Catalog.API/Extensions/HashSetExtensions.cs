@@ -14,10 +14,10 @@ namespace Catalog.Extensions
     public static class HashSetExtensions
     {
         /// <summary>
-        /// Converts instance of an object to hash entry list.
+        /// Converts instance of an object to hash entry list
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="instance">The instance.</param>
+        /// <param name="instance">The instance</param>
         /// <returns></returns>
         public static IEnumerable<HashEntry> ToHashEntryList<T>(this T instance)
         {
@@ -61,10 +61,10 @@ namespace Catalog.Extensions
         }
         
         /// <summary>
-        /// Converts from hash entry list and create instance of type T.
+        /// Converts from hash entry list and create instance of type T
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="entries">The entries returned from StackExchange.redis.</param>
+        /// <param name="entries">The entries returned from StackExchange.redis</param>
         /// <returns>Instance of Type T </returns>
         public static T ToEnumerable<T>(this IEnumerable<HashEntry> entries) where T: new()
         {

@@ -1,7 +1,7 @@
 ﻿namespace Catalog.DataAccess.Models
 {
     /// <summary>
-    /// Usage of ingredient in product.
+    /// Usage of ingredient in product
     /// </summary>
     public class IngredientUsage
     {
