@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StackExchange.Redis;
 
@@ -61,5 +62,31 @@ namespace Catalog.DataAccess.Interfaces
         /// <param name="flags">Flags of operation</param>
         /// <returns>Status of set operation</returns>
         Task<bool> RemoveAsync(RedisKey key, CommandFlags flags = CommandFlags.FireAndForget);
+
+        /// <summary>
+        /// Set collection as hashset to redis cache
+        /// </summary>
+        /// <param name="value">Collection to be set</param>
+        /// <param name="flags">Flags of operation</param>
+        /// <typeparam name="T">Type of entity</typeparam>
+        Task HashSetAsync<T>(IEnumerable<T> value,
+            CommandFlags flags = CommandFlags.FireAndForget);
+
+        /// <summary>
+        /// Get collection from redis cache hashset
+        /// </summary>
+        /// <param name="flags">Flags of operation</param>
+        /// <typeparam name="T">Type of entity</typeparam>
+        /// <returns>Collection of entity</returns>
+        Task HashGetAllAsync<T>(CommandFlags flags = CommandFlags.FireAndForget);
+
+        /// <summary>
+        /// Get hashset entry collection from redis cache
+        /// </summary>
+        /// <param name="key">Key of entry</param>
+        /// <param name="flags">Flags of operation</param>
+        /// <typeparam name="T">Type of entity</typeparam>
+        /// <returns>Entity value from hashset</returns>
+        Task HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.FireAndForget);
     }
 }

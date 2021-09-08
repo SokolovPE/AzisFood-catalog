@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
+        <PackageReference Include="FastMember" Version="1.5.0" />
         <PackageReference Include="Jaeger" Version="1.0.2" />
         <PackageReference Include="MassTransit" Version="7.2.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />

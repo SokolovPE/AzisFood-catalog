@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Catalog.DataAccess.Extensions;
 using Catalog.DataAccess.Interfaces;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -27,6 +29,7 @@ namespace Catalog.DataAccess.Implementations
         {
             await _cacheService.RemoveAsync(EntityName);
             var items = await _repository.GetAsync();
+            //await _cacheService.HashSetAsync(items, CommandFlags.None);
             var cacheSetResult = await _cacheService.SetAsync(EntityName, items, expiry, CommandFlags.None);
             if (!cacheSetResult)
             {

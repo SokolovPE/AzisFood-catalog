@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Catalog.DataAccess.Extensions;
 using Catalog.DataAccess.Interfaces;
+using GreenPipes.Internals.Extensions;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
@@ -48,12 +53,29 @@ namespace Catalog.DataAccess.Implementations
             return await Connection.GetDatabase().KeyDeleteAsync(key, flags);
         }
 
-        // public async Task HashSetAsync(RedisKey key, IEnumerable value, CommandFlags flags = CommandFlags.FireAndForget)
-        // {
-        //     var hashValue = value.ToHashEntryList();
-        //     await Connection.GetDatabase().HashSetAsync(key, hashValue.ToArray(), flags);
-        // }
-        
+        public async Task HashSetAsync<T>(IEnumerable<T> value,
+            CommandFlags flags = CommandFlags.FireAndForget)
+        {
+            // TODO: Move to attribute with default value
+            var key = $"h_{typeof(T).Name}";
+            var hashValue = value.ConvertToHashEntryList();
+            await Connection.GetDatabase().HashSetAsync(key, hashValue.ToArray(), flags);
+        }
+
+        public async Task HashGetAllAsync<T>(CommandFlags flags = CommandFlags.FireAndForget)
+        {
+            // TODO: Move to attribute with default value
+            var key = $"h_{typeof(T).Name}";
+            await Connection.GetDatabase().HashGetAllAsync(key, flags);
+        }
+
+        public async Task HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.FireAndForget)
+        {
+            // TODO: Move to attribute with default value
+            var entityKey = $"h_{typeof(T).Name}";
+            await Connection.GetDatabase().HashGetAsync(entityKey, key, flags);
+        }
+
         // public async Task<IEnumerable<T>> HashGetAsync<T>(RedisKey key, IEnumerable value, CommandFlags flags = CommandFlags.FireAndForget)
         // {
         //     var result = await Connection.GetDatabase().HashGetAllAsync(key, flags);

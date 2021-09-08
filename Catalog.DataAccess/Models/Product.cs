@@ -9,6 +9,9 @@ namespace Catalog.DataAccess.Models
     [BusTopic(Name = "product")]
     public class Product : MongoRepoEntity
     {
+        [HashEntryKey]
+        public string Code => Title.Replace(" ", "");
+        
         /// <summary>
         /// Title of product
         /// </summary>

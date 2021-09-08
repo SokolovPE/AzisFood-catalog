@@ -1,10 +1,15 @@
-﻿namespace Catalog.DataAccess.Models
+﻿using Catalog.DataAccess.Attributes;
+
+namespace Catalog.DataAccess.Models
 {
     /// <summary>
     /// Model of product category
     /// </summary>
     public class Category: MongoRepoEntity
     {
+        [HashEntryKey]
+        public string Code => Title.Replace(" ", "");
+        
         /// <summary>
         /// Title of product
         /// </summary>
