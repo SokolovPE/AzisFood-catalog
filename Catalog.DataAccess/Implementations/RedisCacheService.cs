@@ -62,11 +62,12 @@ namespace Catalog.DataAccess.Implementations
             await Connection.GetDatabase().HashSetAsync(key, hashValue.ToArray(), flags);
         }
 
-        public async Task HashGetAllAsync<T>(CommandFlags flags = CommandFlags.FireAndForget)
+        public async Task<IEnumerable<T>> HashGetAllAsync<T>(CommandFlags flags = CommandFlags.FireAndForget)
         {
             // TODO: Move to attribute with default value
             var key = $"h_{typeof(T).Name}";
-            await Connection.GetDatabase().HashGetAllAsync(key, flags);
+            var entries = await Connection.GetDatabase().HashGetAllAsync(key, flags);
+            return entries.ConvertToCollection<T>();
         }
 
         public async Task HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.FireAndForget)

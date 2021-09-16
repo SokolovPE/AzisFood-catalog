@@ -78,7 +78,7 @@ namespace Catalog.DataAccess.Interfaces
         /// <param name="flags">Flags of operation</param>
         /// <typeparam name="T">Type of entity</typeparam>
         /// <returns>Collection of entity</returns>
-        Task HashGetAllAsync<T>(CommandFlags flags = CommandFlags.FireAndForget);
+        Task<IEnumerable<T>> HashGetAllAsync<T>(CommandFlags flags = CommandFlags.FireAndForget);
 
         /// <summary>
         /// Get hashset entry collection from redis cache

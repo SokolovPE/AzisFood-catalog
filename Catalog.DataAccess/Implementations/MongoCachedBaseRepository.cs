@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace Catalog.DataAccess.Implementations
 {
@@ -48,25 +49,39 @@ namespace Catalog.DataAccess.Implementations
             Items = database.GetCollection<TRepoEntity>(typeof(TRepoEntity).Name);
         }
 
-        public async Task<List<TRepoEntity>> GetAsync()
+        public async Task<IEnumerable<TRepoEntity>> GetAsync()
+        {
+            return await Get(false);
+        }
+        
+        public async Task<IEnumerable<TRepoEntity>> GetHashAsync()
+        {
+            return await Get();
+        }
+        
+        private async Task<IEnumerable<TRepoEntity>> Get(bool hashMode = true)
         {
             _logger.LogInformation($"Requested all {_repoEntityName} items");
             try
             {
-                var redisResult = await _cacheService.GetAsync<List<TRepoEntity>>(_repoEntityName);
+                var redisResult = hashMode
+                    ? await _cacheService.HashGetAllAsync<TRepoEntity>(CommandFlags.None)
+                    : await _cacheService.GetAsync<List<TRepoEntity>>(_repoEntityName);
                 if (redisResult != default)
                 {
+                    var mongoRepoEntities = redisResult as TRepoEntity[] ?? redisResult.ToArray();
                     _logger.LogInformation(
-                        $"Request of all {_repoEntityName} items returned {redisResult.Count} items");
-                    return redisResult;
+                        $"Request of all {_repoEntityName} items returned {mongoRepoEntities.Length} items");
+                    return mongoRepoEntities;
                 }
 
                 _logger.LogWarning($"Items of type {_repoEntityName} are not presented in cache");
-                var dbResult = await (await Items.FindAsync(item => true)).ToListAsync();
+                var dbResult = (await Items.FindAsync(item => true)).ToEnumerable();
                 await SendEvent();
 
-                _logger.LogInformation($"Request of all {_repoEntityName} items returned {dbResult.Count} items");
-                return dbResult;
+                var repoEntities = dbResult as TRepoEntity[] ?? dbResult.ToArray();
+                _logger.LogInformation($"Request of all {_repoEntityName} items returned {repoEntities.Length} items");
+                return repoEntities;
             }
             catch (Exception ex)
             {

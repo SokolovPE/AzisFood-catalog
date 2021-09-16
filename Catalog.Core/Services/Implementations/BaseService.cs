@@ -65,7 +65,7 @@ namespace Catalog.Core.Services.Implementations
         {
             try
             {
-                var items = await Repository.GetAsync();
+                var items = await Repository.GetHashAsync();
                 return Mapper.Map<List<TDto>>(items);
             }
             catch (Exception e)

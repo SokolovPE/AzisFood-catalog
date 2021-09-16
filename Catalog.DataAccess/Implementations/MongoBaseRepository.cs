@@ -24,8 +24,8 @@ namespace Catalog.DataAccess.Implementations
             Items = database.GetCollection<TRepoEntity>(typeof(TRepoEntity).Name);
         }
         
-        public async Task<List<TRepoEntity>> GetAsync() => 
-            await (await Items.FindAsync(item => true)).ToListAsync();
+        public async Task<IEnumerable<TRepoEntity>> GetAsync() => 
+            (await Items.FindAsync(item => true)).ToEnumerable();
 
         public async Task<TRepoEntity> GetAsync(string id) =>
             await (await Items.FindAsync(item => item.Id == id)).FirstOrDefaultAsync();

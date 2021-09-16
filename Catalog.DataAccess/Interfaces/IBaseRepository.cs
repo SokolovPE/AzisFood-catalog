@@ -9,7 +9,7 @@ namespace Catalog.DataAccess.Interfaces
         /// Get items async
         /// </summary>
         /// <returns>Collection of item</returns>
-        public Task<List<TEntity>> GetAsync();
+        public Task<IEnumerable<TEntity>> GetAsync();
         /// <summary>
         /// Get item by id
         /// </summary>
