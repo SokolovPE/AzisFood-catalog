@@ -87,6 +87,6 @@ namespace Catalog.DataAccess.Interfaces
         /// <param name="flags">Flags of operation</param>
         /// <typeparam name="T">Type of entity</typeparam>
         /// <returns>Entity value from hashset</returns>
-        Task HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.FireAndForget);
+        Task<T> HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.FireAndForget);
     }
 }

@@ -70,11 +70,12 @@ namespace Catalog.DataAccess.Implementations
             return entries.ConvertToCollection<T>();
         }
 
-        public async Task HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.FireAndForget)
+        public async Task<T> HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.None)
         {
             // TODO: Move to attribute with default value
             var entityKey = $"h_{typeof(T).Name}";
-            await Connection.GetDatabase().HashGetAsync(entityKey, key, flags);
+            var entry = await Connection.GetDatabase().HashGetAsync(entityKey, key, flags);
+            return JsonConvert.DeserializeObject<T>(entry);
         }
 
         // public async Task<IEnumerable<T>> HashGetAsync<T>(RedisKey key, IEnumerable value, CommandFlags flags = CommandFlags.FireAndForget)

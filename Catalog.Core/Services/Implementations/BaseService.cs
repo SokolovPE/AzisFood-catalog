@@ -83,7 +83,7 @@ namespace Catalog.Core.Services.Implementations
         /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
         public virtual async Task<TDto> GetByIdAsync(string id)
         {
-            var item = await Repository.GetAsync(id);
+            var item = await Repository.GetHashAsync(id);
 
             if (item != null) return Mapper.Map<TDto>(item);
             

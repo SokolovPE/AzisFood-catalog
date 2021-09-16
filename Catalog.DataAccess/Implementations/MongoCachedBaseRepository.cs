@@ -58,62 +58,15 @@ namespace Catalog.DataAccess.Implementations
         {
             return await Get();
         }
-        
-        private async Task<IEnumerable<TRepoEntity>> Get(bool hashMode = true)
-        {
-            _logger.LogInformation($"Requested all {_repoEntityName} items");
-            try
-            {
-                var redisResult = hashMode
-                    ? await _cacheService.HashGetAllAsync<TRepoEntity>(CommandFlags.None)
-                    : await _cacheService.GetAsync<List<TRepoEntity>>(_repoEntityName);
-                if (redisResult != default)
-                {
-                    var mongoRepoEntities = redisResult as TRepoEntity[] ?? redisResult.ToArray();
-                    _logger.LogInformation(
-                        $"Request of all {_repoEntityName} items returned {mongoRepoEntities.Length} items");
-                    return mongoRepoEntities;
-                }
-
-                _logger.LogWarning($"Items of type {_repoEntityName} are not presented in cache");
-                var dbResult = (await Items.FindAsync(item => true)).ToEnumerable();
-                await SendEvent();
-
-                var repoEntities = dbResult as TRepoEntity[] ?? dbResult.ToArray();
-                _logger.LogInformation($"Request of all {_repoEntityName} items returned {repoEntities.Length} items");
-                return repoEntities;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"There was an error during attempt to return all {_repoEntityName} items");
-                return default;
-            }
-        }
 
         public async Task<TRepoEntity> GetAsync(string id)
         {
-            _logger.LogInformation($"Requested {_repoEntityName} with id: {id}");
-            try
-            {
-                var redisResult =
-                    (await _cacheService.GetAsync<List<TRepoEntity>>(_repoEntityName))?.FirstOrDefault(x => x.Id == id);
-                if (redisResult != null)
-                {
-                    _logger.LogInformation($"Request of {_repoEntityName} with id: {id} succeeded");
-                    return redisResult;
-                }
-
-                _logger.LogWarning($"Item of type {_repoEntityName}  with id: {id} is not presented in cache");
-                var dbResult = await (await Items.FindAsync(item => item.Id == id)).FirstOrDefaultAsync();
-                await SendEvent();
-                _logger.LogInformation($"Request of {_repoEntityName} with id: {id} succeeded");
-                return dbResult;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"There was an error during attempt to return all {_repoEntityName} items");
-                return default;
-            }
+            return await Get(id, false);
+        }
+        
+        public async Task<TRepoEntity> GetHashAsync(string id)
+        {
+            return await Get(id);
         }
 
         public async Task<TRepoEntity> CreateAsync(TRepoEntity item)
@@ -233,6 +186,77 @@ namespace Catalog.DataAccess.Implementations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "There was an error during event push to Message Bus");
+            }
+        }
+
+        /// <summary>
+        /// Get items from cache
+        /// </summary>
+        /// <param name="hashMode">Get from HashSet</param>
+        /// <returns>Entries of entity</returns>
+        private async Task<IEnumerable<TRepoEntity>> Get(bool hashMode = true)
+        {
+            _logger.LogInformation($"Requested all {_repoEntityName} items");
+            try
+            {
+                var redisResult = hashMode
+                    ? await _cacheService.HashGetAllAsync<TRepoEntity>(CommandFlags.None)
+                    : await _cacheService.GetAsync<List<TRepoEntity>>(_repoEntityName);
+                if (redisResult != default)
+                {
+                    var mongoRepoEntities = redisResult as TRepoEntity[] ?? redisResult.ToArray();
+                    _logger.LogInformation(
+                        $"Request of all {_repoEntityName} items returned {mongoRepoEntities.Length} items");
+                    return mongoRepoEntities;
+                }
+
+                _logger.LogWarning($"Items of type {_repoEntityName} are not presented in cache");
+                var dbResult = (await Items.FindAsync(item => true)).ToEnumerable();
+                await SendEvent();
+
+                var repoEntities = dbResult as TRepoEntity[] ?? dbResult.ToArray();
+                _logger.LogInformation($"Request of all {_repoEntityName} items returned {repoEntities.Length} items");
+                return repoEntities;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"There was an error during attempt to return all {_repoEntityName} items");
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Get item from cache
+        /// </summary>
+        /// <param name="id">Identifier of entry</param>
+        /// <param name="hashMode">Get from HashSet</param>
+        /// <returns>Entry of entity</returns>
+        private async Task<TRepoEntity> Get(string id, bool hashMode = true)
+        {
+            _logger.LogInformation($"Requested {_repoEntityName} with id: {id}");
+            try
+            {
+                var redisResult = hashMode
+                    ? await _cacheService.HashGetAsync<TRepoEntity>(id, CommandFlags.None)
+                    : (await _cacheService.GetAsync<List<TRepoEntity>>(_repoEntityName))?.FirstOrDefault(
+                        x => x.Id == id);
+                
+                if (redisResult != null)
+                {
+                    _logger.LogInformation($"Request of {_repoEntityName} with id: {id} succeeded");
+                    return redisResult;
+                }
+
+                _logger.LogWarning($"Item of type {_repoEntityName}  with id: {id} is not presented in cache");
+                var dbResult = await (await Items.FindAsync(item => item.Id == id)).FirstOrDefaultAsync();
+                await SendEvent();
+                _logger.LogInformation($"Request of {_repoEntityName} with id: {id} succeeded");
+                return dbResult;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"There was an error during attempt to return all {_repoEntityName} items");
+                return default;
             }
         }
     }

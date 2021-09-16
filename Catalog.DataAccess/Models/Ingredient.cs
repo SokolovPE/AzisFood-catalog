@@ -8,9 +8,6 @@ namespace Catalog.DataAccess.Models
     [BusTopic(Name = "ingredient", Events = new [] {EventType.Deleted, EventType.Recache})]
     public class Ingredient : MongoRepoEntity
     {
-        [HashEntryKey]
-        public string Code => Title.Replace(" ", "");
-        
         /// <summary>
         /// Title of ingredient
         /// </summary>

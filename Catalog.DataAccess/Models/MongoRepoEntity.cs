@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Catalog.DataAccess.Attributes;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Catalog.DataAccess.Models
@@ -9,6 +10,7 @@ namespace Catalog.DataAccess.Models
         /// Identifier
         /// </summary>
         [BsonId]
+        [HashEntryKey]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         

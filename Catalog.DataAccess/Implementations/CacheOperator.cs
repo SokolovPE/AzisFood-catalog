@@ -25,16 +25,23 @@ namespace Catalog.DataAccess.Implementations
         }
 
         /// <inheritdoc />
-        public async Task FullRecache(TimeSpan expiry)
+        public async Task FullRecache(TimeSpan expiry, bool asHash = true)
         {
             await _cacheService.RemoveAsync(EntityName);
-            var items = await _repository.GetAsync();
-            //await _cacheService.HashSetAsync(items, CommandFlags.None);
-            var cacheSetResult = await _cacheService.SetAsync(EntityName, items, expiry, CommandFlags.None);
-            if (!cacheSetResult)
+            var items = (await _repository.GetAsync()).ToList();
+            
+            if (asHash)
             {
-                _logger.LogWarning($"Unable to refresh {EntityName} cache");
-                throw new Exception($"Unable to refresh {EntityName} cache");
+                await _cacheService.HashSetAsync(items, CommandFlags.None);
+            }
+            else
+            {
+                var cacheSetResult = await _cacheService.SetAsync(EntityName, items, expiry, CommandFlags.None);
+                if (!cacheSetResult)
+                {
+                    _logger.LogWarning($"Unable to refresh {EntityName} cache");
+                    throw new Exception($"Unable to refresh {EntityName} cache");
+                }
             }
 
             _logger.LogInformation($"Successfully refreshed {EntityName} cache");
