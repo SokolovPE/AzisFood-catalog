@@ -56,32 +56,31 @@ namespace Catalog.DataAccess.Implementations
         public async Task HashSetAsync<T>(IEnumerable<T> value,
             CommandFlags flags = CommandFlags.FireAndForget)
         {
-            // TODO: Move to attribute with default value
-            var key = $"h_{typeof(T).Name}";
             var hashValue = value.ConvertToHashEntryList();
+            var key = HashSetExtensions.GetHashKey<T>();
             await Connection.GetDatabase().HashSetAsync(key, hashValue.ToArray(), flags);
         }
 
         public async Task<IEnumerable<T>> HashGetAllAsync<T>(CommandFlags flags = CommandFlags.FireAndForget)
         {
-            // TODO: Move to attribute with default value
-            var key = $"h_{typeof(T).Name}";
+            var key = HashSetExtensions.GetHashKey<T>();
             var entries = await Connection.GetDatabase().HashGetAllAsync(key, flags);
             return entries.ConvertToCollection<T>();
         }
 
         public async Task<T> HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.None)
         {
-            // TODO: Move to attribute with default value
-            var entityKey = $"h_{typeof(T).Name}";
+            var entityKey = HashSetExtensions.GetHashKey<T>();
             var entry = await Connection.GetDatabase().HashGetAsync(entityKey, key, flags);
             return JsonConvert.DeserializeObject<T>(entry);
         }
 
-        // public async Task<IEnumerable<T>> HashGetAsync<T>(RedisKey key, IEnumerable value, CommandFlags flags = CommandFlags.FireAndForget)
-        // {
-        //     var result = await Connection.GetDatabase().HashGetAllAsync(key, flags);
-        //     var x = result.ToEnumerable<T>();
-        // }
+        public async Task<bool> HashAppendAsync<T>(T value, CommandFlags flags = CommandFlags.FireAndForget)
+        {
+            var entityKey = HashSetExtensions.GetHashKey<T>();
+            var entryKey = value.GetHashEntryKey();
+            var hashValue = JsonConvert.SerializeObject(value);
+            return await Connection.GetDatabase().HashSetAsync(entityKey, entryKey, hashValue);
+        }
     }
 }

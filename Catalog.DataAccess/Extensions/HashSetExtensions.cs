@@ -31,16 +31,17 @@ namespace Catalog.DataAccess.Extensions
                 MemberTypes.Property => ((PropertyInfo) memberInfo).GetValue(forObject),
                 _ => throw new NotImplementedException()
             };
-        } 
+        }
+
 
         /// <summary>
-        /// Converts instance of an object to hash entry list
+        /// Returns value of hash entry key
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="instance">The instance</param>
-        /// <returns></returns>
+        /// <param name="entry">Entity entry</param>
+        /// <typeparam name="T">Type of entity</typeparam>
+        /// <returns>Value of hash key</returns>
         /// <exception cref="ArgumentException">Entities without HashEntryKey attribute are not supported</exception>
-        public static IEnumerable<HashEntry> ConvertToHashEntryList<T>(this IEnumerable<T> instance)
+        public static string GetHashEntryKey<T>(this T entry)
         {
             var hashEntryKeyMember = typeof(T).GetMembers()
                 .FirstOrDefault(m => m.GetCustomAttributes(typeof(HashEntryKey), false).Any());
@@ -49,7 +50,51 @@ namespace Catalog.DataAccess.Extensions
             {
                 throw new ArgumentException($"Entity {nameof(T)} must contain HashEntryKey attribute");
             }
+            return hashEntryKeyMember.GetValue(entry).ToString();
+        }
+
+        /// <summary>
+        /// Get key for entity HashSet
+        /// </summary>
+        /// <typeparam name="T">Type of entity</typeparam>
+        /// <returns>Key for entity HashSet</returns>
+        public static string GetHashKey<T>()
+        {
+            var hashEntryKeyAttr = typeof(T).GetCustomAttributes(typeof(HashKey), false).FirstOrDefault();
+            
+            if (hashEntryKeyAttr is null)
+            {
+                return $"h_{typeof(T).Name}";
+            }
+            
+            var hashEntryKeyMember = (HashKey)(hashEntryKeyAttr);
+            return hashEntryKeyMember.Key;
+        }
         
+        /// <summary>
+        /// Converts instance of an object to hash entry list
+        /// </summary>
+        /// <typeparam name="T">Type of entity</typeparam>
+        /// <param name="instance">The instance</param>
+        /// <returns>Collection of HashEntries</returns>
+        /// <exception cref="ArgumentException">Entities without HashEntryKey attribute are not supported</exception>
+        public static IEnumerable<HashEntry> ConvertToHashEntryList<T>(this IEnumerable<T> instance)
+        {
+            // Getting of key duplicates GetHashEntryKey, but in this case key member should be found only once
+            // because of reflection
+            var hashEntryKeyMembers = typeof(T).GetMembers()
+                .Where(m => m.GetCustomAttributes(typeof(HashEntryKey), false).Any()).ToArray();
+            if (!hashEntryKeyMembers.Any())
+            {
+                throw new ArgumentException($"Entity {nameof(T)} must contain HashEntryKey attribute");
+            }
+
+            // If there's more than one parameter defined take the one which is not belongs to Id field
+            var hashEntryKeyMember = hashEntryKeyMembers.Length > 1
+                ? hashEntryKeyMembers.First(m => m.Name != "Id")
+                : hashEntryKeyMembers
+                    .First();
+
             var result = instance.Select(entry =>
             {
                 var key = hashEntryKeyMember.GetValue(entry).ToString();

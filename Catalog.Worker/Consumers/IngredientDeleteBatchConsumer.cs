@@ -35,7 +35,6 @@ namespace Catalog.Worker.Consumers
             {
                 await _productService.DeleteIngredients(ingredientIds);
                 await _ingredientCacheOperator.FullRecache(TimeSpan.FromDays(1));
-                // TODO: Use hashet and update only required records
                 await _productCacheOperator.FullRecache(TimeSpan.FromDays(1));
             }
         }

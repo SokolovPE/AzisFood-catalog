@@ -6,6 +6,8 @@ namespace Catalog.DataAccess.Models
     /// Model of ingredient
     /// </summary>
     [BusTopic(Name = "ingredient", Events = new [] {EventType.Deleted, EventType.Recache})]
+    // Key for demonstration how to define own name for HashSet, by default h_TypeName
+    [HashKey(Key = "h_Ingredient")]
     public class Ingredient : MongoRepoEntity
     {
         /// <summary>

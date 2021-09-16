@@ -88,5 +88,14 @@ namespace Catalog.DataAccess.Interfaces
         /// <typeparam name="T">Type of entity</typeparam>
         /// <returns>Entity value from hashset</returns>
         Task<T> HashGetAsync<T>(RedisValue key, CommandFlags flags = CommandFlags.FireAndForget);
+
+        /// <summary>
+        /// Append entry to hashset
+        /// </summary>
+        /// <param name="value">Entity entry to be appended</param>
+        /// <param name="flags">Flags of operation</param>
+        /// <typeparam name="T">Type of entity</typeparam>
+        /// <returns>Status of set operation</returns>
+        Task<bool> HashAppendAsync<T>(T value, CommandFlags flags = CommandFlags.FireAndForget);
     }
 }
