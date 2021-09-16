@@ -85,12 +85,14 @@ namespace Catalog
             services.AddSingleton<IRedisCacheService, RedisCacheService>();
             
             // Add RabbitMQ MassTransit
+            services.Configure<MQOptions>(Configuration.GetSection(nameof(MQOptions)));
+            services.AddSingleton<IMQOptions>(sp =>
+                sp.GetRequiredService<IOptions<MQOptions>>().Value);
             services.AddMassTransit(config =>
             {
                 config.UsingRabbitMq((_, cfg) =>
                 {
-                    //TODO: Move to config file
-                    cfg.Host("amqp://sub:q12345@localhost:5672/catalog");
+                    cfg.Host(Configuration.GetSection(nameof(MQOptions)).Get<MQOptions>().ConnectionString);
                 });
             });
             services.AddMassTransitHostedService();

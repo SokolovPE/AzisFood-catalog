@@ -10,17 +10,19 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using OpenTracing;
+using OpenTracing.Tag;
 using StackExchange.Redis;
 
 namespace Catalog.DataAccess.Implementations
 {
-    // TODO: Tracing!!!
     public class MongoCachedBaseRepository<TRepoEntity> : ICachedBaseRepository<TRepoEntity>
         where TRepoEntity : MongoRepoEntity
     {
         private readonly ILogger<MongoCachedBaseRepository<TRepoEntity>> _logger;
         private readonly IRedisCacheService _cacheService;
         private readonly ISendEndpointProvider _sendEndpointProvider;
+        private readonly ITracer _tracer;
         private readonly string _repoEntityName;
         private readonly BusTopic _busTopic;
 
@@ -31,11 +33,13 @@ namespace Catalog.DataAccess.Implementations
         public MongoCachedBaseRepository(ILogger<MongoCachedBaseRepository<TRepoEntity>> logger,
             IMongoOptions mongoOptions,
             IRedisCacheService cacheService,
-            ISendEndpointProvider sendEndpointProvider)
+            ISendEndpointProvider sendEndpointProvider,
+            ITracer tracer)
         {
             _logger = logger;
             _cacheService = cacheService;
             _sendEndpointProvider = sendEndpointProvider;
+            _tracer = tracer;
 
             // Fill constants
             _repoEntityName = typeof(TRepoEntity).Name;
@@ -49,35 +53,30 @@ namespace Catalog.DataAccess.Implementations
             Items = database.GetCollection<TRepoEntity>(typeof(TRepoEntity).Name);
         }
 
-        public async Task<IEnumerable<TRepoEntity>> GetAsync()
-        {
-            return await Get(false);
-        }
-        
-        public async Task<IEnumerable<TRepoEntity>> GetHashAsync()
-        {
-            return await Get();
-        }
+        public async Task<IEnumerable<TRepoEntity>> GetAsync() =>
+            await Get(false);
 
-        public async Task<TRepoEntity> GetAsync(string id)
-        {
-            return await Get(id, false);
-        }
-        
-        public async Task<TRepoEntity> GetHashAsync(string id)
-        {
-            return await Get(id);
-        }
+        public async Task<IEnumerable<TRepoEntity>> GetHashAsync() =>
+            await Get();
+
+        public async Task<TRepoEntity> GetAsync(string id) =>
+            await Get(id, false);
+
+        public async Task<TRepoEntity> GetHashAsync(string id) =>
+            await Get(id);
 
         public async Task<TRepoEntity> CreateAsync(TRepoEntity item)
         {
             _logger.LogInformation($"Requested creation of {_repoEntityName}: {JsonConvert.SerializeObject(item)}");
+            var mainSpan = _tracer.BuildSpan("mongo-cached-repo.create").StartActive();
             try
             {
                 // Assign unique id
                 item.Id = ObjectId.GenerateNewId().ToString();
+                var insertSpan = _tracer.BuildSpan("insertion").WithTag(Tags.DbType, "Mongo").AsChildOf(mainSpan.Span)
+                    .Start();
                 await Items.InsertOneAsync(item);
-
+                insertSpan.Finish();
                 await SendEvent();
                 _logger.LogInformation($"Requested creation of {_repoEntityName} succeeded");
                 return item;
@@ -87,15 +86,23 @@ namespace Catalog.DataAccess.Implementations
                 _logger.LogError(ex, $"There was an error during attempt to create {_repoEntityName}");
                 return default;
             }
+            finally
+            {
+                mainSpan.Span.Finish();
+            }
         }
 
         public async Task UpdateAsync(string id, TRepoEntity itemIn)
         {
             _logger.LogInformation(
                 $"Requested update of {_repoEntityName} with id {id} with new value: {JsonConvert.SerializeObject(itemIn)}");
+            var mainSpan = _tracer.BuildSpan("mongo-cached-repo.update").StartActive();
             try
             {
+                var replaceSpan = _tracer.BuildSpan("replace").WithTag(Tags.DbType, "Mongo").AsChildOf(mainSpan.Span)
+                    .Start();
                 await Items.ReplaceOneAsync(item => item.Id == id, itemIn);
+                replaceSpan.Finish();
                 await SendEvent();
                 _logger.LogInformation($"Requested update of {_repoEntityName} succeeded");
             }
@@ -103,14 +110,22 @@ namespace Catalog.DataAccess.Implementations
             {
                 _logger.LogError(ex, $"There was an error during attempt to update {_repoEntityName}");
             }
+            finally
+            {
+                mainSpan.Span.Finish();
+            }
         }
 
         public async Task RemoveAsync(TRepoEntity itemIn)
         {
             _logger.LogInformation($"Requested delete of {_repoEntityName}: {JsonConvert.SerializeObject(itemIn)}");
+            var mainSpan = _tracer.BuildSpan("mongo-cached-repo.delete").StartActive();
             try
             {
+                var deleteSpan = _tracer.BuildSpan("deletion").WithTag(Tags.DbType, "Mongo").AsChildOf(mainSpan.Span)
+                    .Start();
                 await Items.DeleteOneAsync(item => item.Id == itemIn.Id);
+                deleteSpan.Finish();
                 await SendEvent();
                 _logger.LogInformation($"Requested delete of {_repoEntityName} succeeded");
             }
@@ -118,15 +133,24 @@ namespace Catalog.DataAccess.Implementations
             {
                 _logger.LogError(ex, $"There was an error during attempt to delete {_repoEntityName}");
             }
+            finally
+            {
+                mainSpan.Span.Finish();
+            }
         }
 
         public async Task RemoveAsync(string id)
         {
             _logger.LogInformation($"Requested delete of {_repoEntityName} with id {id}");
+            var mainSpan = _tracer.BuildSpan("mongo-cached-repo.delete").StartActive();
             try
             {
+                var deleteSpan = _tracer.BuildSpan("deletion").WithTag(Tags.DbType, "Mongo").AsChildOf(mainSpan.Span)
+                    .Start();
                 await Items.DeleteOneAsync(item => item.Id == id);
+                deleteSpan.Finish();
                 await SendEvent();
+                // TODO: On deletion no need fully recache - just remove hash entry!
                 await SendEvent(eventType: EventType.Deleted, payload: id);
                 _logger.LogInformation($"Requested delete of {_repoEntityName} succeeded");
             }
@@ -134,22 +158,35 @@ namespace Catalog.DataAccess.Implementations
             {
                 _logger.LogError(ex, $"There was an error during attempt to delete {_repoEntityName}");
             }
+            finally
+            {
+                mainSpan.Span.Finish();
+            }
         }
 
         public async Task RemoveManyAsync(string[] ids)
         {
             _logger.LogInformation(
                 $"Requested delete of multiple {_repoEntityName} with ids {JsonConvert.SerializeObject(ids)}");
+            var mainSpan = _tracer.BuildSpan("mongo-cached-repo.delete").StartActive();
             try
             {
+                var deleteSpan = _tracer.BuildSpan("deletion").WithTag(Tags.DbType, "Mongo").AsChildOf(mainSpan.Span)
+                    .Start();
                 await Items.DeleteManyAsync(item => ids.Contains(item.Id));
+                deleteSpan.Finish();
                 await SendEvent();
+                // TODO: On deletion no need fully recache - just remove hash entry!
                 await SendEvent(eventType: EventType.Deleted, payload: ids);
                 _logger.LogInformation($"Requested delete of multiple {_repoEntityName} succeeded");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"There was an error during attempt to delete multiple {_repoEntityName}");
+            }
+            finally
+            {
+                mainSpan.Span.Finish();
             }
         }
 
@@ -197,6 +234,7 @@ namespace Catalog.DataAccess.Implementations
         private async Task<IEnumerable<TRepoEntity>> Get(bool hashMode = true)
         {
             _logger.LogInformation($"Requested all {_repoEntityName} items");
+            var mainSpan = _tracer.BuildSpan("mongo-cached-repo.get-all").StartActive();
             try
             {
                 var redisResult = hashMode
@@ -211,7 +249,10 @@ namespace Catalog.DataAccess.Implementations
                 }
 
                 _logger.LogWarning($"Items of type {_repoEntityName} are not presented in cache");
+                var dbSpan = _tracer.BuildSpan("mongo-cached-repo.get.db").WithTag(Tags.DbType, "Mongo")
+                    .AsChildOf(mainSpan.Span).Start();
                 var dbResult = (await Items.FindAsync(item => true)).ToEnumerable();
+                dbSpan.Finish();
                 await SendEvent();
 
                 var repoEntities = dbResult as TRepoEntity[] ?? dbResult.ToArray();
@@ -223,6 +264,10 @@ namespace Catalog.DataAccess.Implementations
                 _logger.LogError(ex, $"There was an error during attempt to return all {_repoEntityName} items");
                 return default;
             }
+            finally
+            {
+                mainSpan.Span.Finish();
+            }
         }
 
         /// <summary>
@@ -233,6 +278,7 @@ namespace Catalog.DataAccess.Implementations
         /// <returns>Entry of entity</returns>
         private async Task<TRepoEntity> Get(string id, bool hashMode = true)
         {
+            var mainSpan = _tracer.BuildSpan("mongo-cached-repo.get").StartActive();
             _logger.LogInformation($"Requested {_repoEntityName} with id: {id}");
             try
             {
@@ -240,7 +286,7 @@ namespace Catalog.DataAccess.Implementations
                     ? await _cacheService.HashGetAsync<TRepoEntity>(id, CommandFlags.None)
                     : (await _cacheService.GetAsync<List<TRepoEntity>>(_repoEntityName))?.FirstOrDefault(
                         x => x.Id == id);
-                
+
                 if (redisResult != null)
                 {
                     _logger.LogInformation($"Request of {_repoEntityName} with id: {id} succeeded");
@@ -248,7 +294,10 @@ namespace Catalog.DataAccess.Implementations
                 }
 
                 _logger.LogWarning($"Item of type {_repoEntityName}  with id: {id} is not presented in cache");
+                var dbSpan = _tracer.BuildSpan("mongo-cached-repo.get.db").WithTag(Tags.DbType, "Mongo")
+                    .AsChildOf(mainSpan.Span).Start();
                 var dbResult = await (await Items.FindAsync(item => item.Id == id)).FirstOrDefaultAsync();
+                dbSpan.Finish();
                 await SendEvent();
                 _logger.LogInformation($"Request of {_repoEntityName} with id: {id} succeeded");
                 return dbResult;
@@ -257,6 +306,10 @@ namespace Catalog.DataAccess.Implementations
             {
                 _logger.LogError(ex, $"There was an error during attempt to return all {_repoEntityName} items");
                 return default;
+            }
+            finally
+            {
+                mainSpan.Span.Finish();
             }
         }
     }

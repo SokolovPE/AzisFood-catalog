@@ -23,7 +23,7 @@ namespace Catalog.DataAccess.Interfaces
         /// <param name="expiry">The expiry to set</param>
         /// <param name="flags">Flags of operation</param>
         /// <returns>Status of set operation</returns>
-        Task<bool> SetAsync(RedisKey key, RedisValue value, TimeSpan? expiry,
+        Task<bool> SetRawAsync(RedisKey key, RedisValue value, TimeSpan? expiry,
             CommandFlags flags = CommandFlags.FireAndForget);
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Catalog.DataAccess.Interfaces
         /// <param name="key">The key of the string</param>
         /// <param name="flags">Flags of operation</param>
         /// <returns>Value from redis</returns>
-        Task<RedisValue> GetAsync(RedisKey key, CommandFlags flags = CommandFlags.None);
+        Task<RedisValue> GetRawAsync(RedisKey key, CommandFlags flags = CommandFlags.None);
         
         /// <summary>
         /// Get value from redis cache
