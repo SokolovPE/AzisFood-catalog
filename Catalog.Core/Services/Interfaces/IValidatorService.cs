@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Catalog.DataAccess.Models;
+using AzisFood.DataEngine.Interfaces;
 
 namespace Catalog.Core.Services.Interfaces
 {

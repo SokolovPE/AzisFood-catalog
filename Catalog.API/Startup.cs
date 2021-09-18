@@ -1,19 +1,18 @@
 using System.IO;
-using Catalog.DataAccess.Implementations;
-using Catalog.DataAccess.Interfaces;
+using AzisFood.CacheService.Redis.Extensions;
+using AzisFood.DataEngine.Mongo.Extensions;
+using AzisFood.MQ.Rabbit.Extensions;
 using Catalog.Extensions;
 using Jaeger;
 using Jaeger.Reporters;
 using Jaeger.Samplers;
 using Jaeger.Senders.Thrift;
-using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OpenTracing;
 using OpenTracing.Contrib.NetCore.Configuration;
@@ -66,6 +65,7 @@ namespace Catalog
             services.Configure<HttpHandlerDiagnosticOptions>(options =>
                 options.OperationNameResolver =
                     request => $"{request.Method.Method}: {request?.RequestUri?.AbsoluteUri}");
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalog.API", Version = "v1"});
@@ -73,29 +73,14 @@ namespace Catalog
                 c.IncludeXmlComments(filePath);
             });
             
+            // Add RabbitMQ MassTransit
+            services.AddRabbitMQSupport(Configuration);
+            
             // Add MongoDb config
-            services.Configure<MongoOptions>(Configuration.GetSection(nameof(MongoOptions)));
-            services.AddSingleton<IMongoOptions>(sp =>
-                sp.GetRequiredService<IOptions<MongoOptions>>().Value);
+            services.AddMongoDBSupport(Configuration);
             
             // Add Redis config
-            services.Configure<RedisOptions>(Configuration.GetSection(nameof(RedisOptions)));
-            services.AddSingleton<IRedisOptions>(sp =>
-                sp.GetRequiredService<IOptions<RedisOptions>>().Value);
-            services.AddSingleton<IRedisCacheService, RedisCacheService>();
-            
-            // Add RabbitMQ MassTransit
-            services.Configure<MQOptions>(Configuration.GetSection(nameof(MQOptions)));
-            services.AddSingleton<IMQOptions>(sp =>
-                sp.GetRequiredService<IOptions<MQOptions>>().Value);
-            services.AddMassTransit(config =>
-            {
-                config.UsingRabbitMq((_, cfg) =>
-                {
-                    cfg.Host(Configuration.GetSection(nameof(MQOptions)).Get<MQOptions>().ConnectionString);
-                });
-            });
-            services.AddMassTransitHostedService();
+            services.AddRedisSupport(Configuration);
             
             // Registrations
             services.AddCoreServices();

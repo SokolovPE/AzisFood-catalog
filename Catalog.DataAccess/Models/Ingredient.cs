@@ -1,4 +1,7 @@
-﻿using Catalog.DataAccess.Attributes;
+﻿using AzisFood.CacheService.Abstractions.Models;
+using AzisFood.DataEngine.Mongo.Models;
+using AzisFood.MQ.Abstractions.Attributes;
+using AzisFood.MQ.Abstractions.Models;
 
 namespace Catalog.DataAccess.Models
 {

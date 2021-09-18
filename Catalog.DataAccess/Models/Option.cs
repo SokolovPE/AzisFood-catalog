@@ -1,4 +1,6 @@
-﻿namespace Catalog.DataAccess.Models
+﻿using AzisFood.DataEngine.Mongo.Models;
+
+namespace Catalog.DataAccess.Models
 {
     /// <summary>
     /// Model of product option

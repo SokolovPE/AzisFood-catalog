@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using AzisFood.DataEngine.Interfaces;
 using Catalog.Core.Services.Interfaces;
-using Catalog.DataAccess.Interfaces;
-using Catalog.DataAccess.Models;
 using Catalog.Sdk.Models;
 using Microsoft.Extensions.Logging;
 

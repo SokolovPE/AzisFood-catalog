@@ -1,15 +1,14 @@
 using System.IO;
 using System.Reflection;
-using Catalog.DataAccess.Implementations;
-using Catalog.DataAccess.Interfaces;
+using AzisFood.CacheService.Redis.Extensions;
+using AzisFood.DataEngine.Mongo.Extensions;
+using AzisFood.MQ.Rabbit.Extensions;
 using Catalog.DataAccess.Models;
 using Catalog.Extensions;
 using Catalog.Worker.Consumers;
-using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 
 namespace Catalog.Worker
 {
@@ -29,15 +28,14 @@ namespace Catalog.Worker
                         .AddJsonFile("appsettings.json");
                     var configuration = configBuilder.Build();
                     
+                    // Add open tracing with Jaeger
+                    services.AddOpenTracing();
+                    
                     // Add Redis config
-                    services.Configure<RedisOptions>(configuration.GetSection(nameof(RedisOptions)));
-                    services.AddSingleton<IRedisOptions>(sp =>
-                        sp.GetRequiredService<IOptions<RedisOptions>>().Value);
-                    services.AddSingleton<IRedisCacheService, RedisCacheService>();
+                    services.AddRedisSupport(configuration);
+                    
                     // Add MongoDb config
-                    services.Configure<MongoOptions>(configuration.GetSection(nameof(MongoOptions)));
-                    services.AddSingleton<IMongoOptions>(sp =>
-                        sp.GetRequiredService<IOptions<MongoOptions>>().Value);
+                    services.AddMongoDBSupport(configuration);
 
                     // Register mappings
                     services.AddMapper();
@@ -46,22 +44,15 @@ namespace Catalog.Worker
                     services.AddCoreServices();
                     
                     // Add RabbitMQ MassTransit
-                    services.AddMassTransit(config =>
+                    services.AddRabbitMQSupport(configuration, config =>
                     {
-                        // Add consumers and re-cache entities
                         var tempServiceProvider = services.BuildServiceProvider();
+                        // Add consumers and re-cache entities
                         config.AddConsumer<Product>(tempServiceProvider);
                         config.AddConsumer<Ingredient>(tempServiceProvider);
                         config.AddConsumer<IngredientDeleteBatchConsumer>(
-                            typeof(IngredientDeleteBatchConsumerDefinition));
-                        
-                        config.UsingRabbitMq((ctx, cfg) =>
-                        {
-                            cfg.Host(configuration.GetValue<string>("MassTransitOptions:ConnectionString"));
-                            cfg.ConfigureEndpoints(ctx);
-                        });
+                             typeof(IngredientDeleteBatchConsumerDefinition));
                     });
-                    services.AddMassTransitHostedService();
                 });
     }
 }

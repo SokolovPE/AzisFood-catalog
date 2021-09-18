@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalog.DataAccess.Models;
+using AzisFood.DataEngine.Interfaces;
 using Catalog.Sdk.Models;
 
 namespace Catalog.Core.Services.Interfaces

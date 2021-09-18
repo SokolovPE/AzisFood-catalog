@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalog.DataAccess.Interfaces;
-using Catalog.DataAccess.Models;
 using MassTransit;
 using System.Reflection;
-using Catalog.DataAccess.Attributes;
+using AzisFood.MQ.Abstractions.Attributes;
+using AzisFood.MQ.Abstractions.Models;
 using GreenPipes;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
+using AzisFood.DataEngine.Interfaces;
 
 namespace Catalog.Worker.Consumers
 {

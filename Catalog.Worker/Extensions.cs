@@ -1,5 +1,5 @@
 using System;
-using Catalog.DataAccess.Interfaces;
+using AzisFood.DataEngine.Interfaces;
 using Catalog.Worker.Consumers;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
 using Microsoft.Extensions.DependencyInjection;

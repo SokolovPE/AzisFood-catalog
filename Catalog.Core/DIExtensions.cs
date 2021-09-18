@@ -1,8 +1,6 @@
 ﻿using Catalog.Core.Mappings;
 using Catalog.Core.Services.Implementations;
 using Catalog.Core.Services.Interfaces;
-using Catalog.DataAccess.Implementations;
-using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
 using Catalog.Sdk.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,13 +30,10 @@ namespace Catalog.Extensions
         /// <param name="services">Collection of services</param>
         public static void AddCoreServices(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IBaseRepository<>), typeof(MongoBaseRepository<>));
-            services.AddTransient(typeof(ICachedBaseRepository<>), typeof(MongoCachedBaseRepository<>));
             services.AddTransient(typeof(IService<Ingredient, IngredientDto, IngredientRequestDto>),
                 typeof(BaseService<Ingredient, IngredientDto, IngredientRequestDto>));
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IValidatorService<Product>, ProductValidatorService>();
-            services.AddTransient(typeof(ICacheOperator<>), typeof(CacheOperator<>));
         }
     }
 }

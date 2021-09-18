@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AzisFood.DataEngine.Interfaces;
+using AzisFood.MQ.Abstractions.Models;
 using Catalog.Core.Services.Interfaces;
-using Catalog.DataAccess.Interfaces;
 using Catalog.DataAccess.Models;
 using GreenPipes;
 using MassTransit;

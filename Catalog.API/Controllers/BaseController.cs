@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using AzisFood.DataEngine.Interfaces;
 using Catalog.Core.Services.Interfaces;
-using Catalog.DataAccess.Models;
 using Catalog.Sdk.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

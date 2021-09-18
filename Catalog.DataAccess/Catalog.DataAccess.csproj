@@ -1,13 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
+        <PackageReference Include="AzisFood.DataEngine.Mongo" Version="1.0.2.3" />
         <PackageReference Include="FastMember" Version="1.5.0" />
         <PackageReference Include="Jaeger" Version="1.0.2" />
         <PackageReference Include="MassTransit" Version="7.2.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.12.4" />
         <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.7.1" />
-        <PackageReference Include="StackExchange.Redis" Version="2.2.62" />
+        <PackageReference Include="StackExchange.Redis" Version="2.2.50" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Extensions" />
     </ItemGroup>
     
     <PropertyGroup>

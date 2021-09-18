@@ -17,6 +17,7 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.1" />
         <PackageReference Include="Jaeger" Version="1.0.2" />
         <PackageReference Include="MassTransit" Version="7.2.1" />
         <PackageReference Include="MassTransit.AspNetCore" Version="7.2.1" />
@@ -31,7 +32,7 @@
         <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
         <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
-        <PackageReference Include="StackExchange.Redis" Version="2.2.62" />
+        <PackageReference Include="StackExchange.Redis" Version="2.2.50" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
     </ItemGroup>
 
