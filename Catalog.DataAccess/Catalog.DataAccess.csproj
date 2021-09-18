@@ -10,10 +10,6 @@
         <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.7.1" />
         <PackageReference Include="StackExchange.Redis" Version="2.2.50" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Extensions" />
-    </ItemGroup>
     
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>

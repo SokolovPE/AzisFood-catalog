@@ -30,8 +30,15 @@ namespace Catalog.Extensions
         /// <param name="services">Collection of services</param>
         public static void AddCoreServices(this IServiceCollection services)
         {
+            // Ingredient service
             services.AddTransient(typeof(IService<Ingredient, IngredientDto, IngredientRequestDto>),
                 typeof(BaseService<Ingredient, IngredientDto, IngredientRequestDto>));
+            
+            // Category service
+            services.AddTransient(typeof(IService<Category, CategoryDto, CategoryRequestDto>),
+                typeof(BaseService<Category, CategoryDto, CategoryRequestDto>));
+            
+            // Product service
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IValidatorService<Product>, ProductValidatorService>();
         }

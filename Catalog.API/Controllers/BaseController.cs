@@ -6,6 +6,7 @@ using AzisFood.DataEngine.Interfaces;
 using Catalog.Core.Services.Interfaces;
 using Catalog.Sdk.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -64,7 +65,7 @@ namespace Catalog.Controllers
         /// </summary>
         /// <param name="id">Id of entity to get</param>
         /// <returns></returns>
-        [HttpGet("{id:length(24)}", Name = "GetOne")]
+        [HttpGet("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -99,8 +100,7 @@ namespace Catalog.Controllers
             try
             {
                 var insertedItem = await _service.AddAsync(item);
-                return CreatedAtRoute("GetOne", new {id = insertedItem.Id},
-                    insertedItem);
+                return Created(Request.GetDisplayUrl(), insertedItem);
             }
             catch (InvalidConstraintException e)
             {

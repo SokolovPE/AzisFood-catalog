@@ -1,14 +1,9 @@
-﻿using AzisFood.CacheService.Abstractions.Models;
-using AzisFood.DataEngine.Mongo.Models;
-using AzisFood.MQ.Abstractions.Attributes;
-
-namespace Catalog.DataAccess.Models
+namespace Catalog.Sdk.Models
 {
     /// <summary>
-    /// Model of product category
+    /// Request data transfer object for category
     /// </summary>
-    [BusTopic(Name = "category")]
-    public class Category: MongoRepoEntity
+    public class CategoryRequestDto : IRequestDto
     {
         /// <summary>
         /// Title of product
