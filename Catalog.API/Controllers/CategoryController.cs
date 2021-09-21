@@ -11,8 +11,8 @@ namespace Catalog.Controllers
     public class CategoryController : BaseController<Category, CategoryDto, CategoryRequestDto>
     {
         /// <inheritdoc />
-        public CategoryController(ILogger<BaseController<Category, CategoryDto, CategoryRequestDto>> logger,
-            IService<Category, CategoryDto, CategoryRequestDto> service) : base(logger, service)
+        public CategoryController(ILogger<BaseController<Category, CategoryDto, CategoryRequestDto>> controllerLogger,
+            IService<Category, CategoryDto, CategoryRequestDto> service) : base(controllerLogger, service)
         {
         }
     }

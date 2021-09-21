@@ -74,5 +74,29 @@ namespace Catalog.Core.Services.Implementations
                     $"{string.Join(',', toUpdate.Select(p => p.Id))}");
             }
         }
+
+        /// <inheritdoc />
+        public async Task SetCategories(string productId, IEnumerable<string> categoryIds)
+        {
+            var productItem = await GetByIdAsync(productId);
+            productItem.CategoryId = categoryIds.ToArray();
+            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem));
+        }
+        
+        /// <inheritdoc />
+        public async Task AssignCategories(string productId, IEnumerable<string> categoryIds)
+        {
+            var productItem = await GetByIdAsync(productId);
+            productItem.CategoryId = productItem.CategoryId.Concat(categoryIds).ToArray();
+            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem));
+        }
+
+        /// <inheritdoc />
+        public async Task RetainCategories(string productId, IEnumerable<string> categoryIds)
+        {
+            var productItem = await GetByIdAsync(productId);
+            productItem.CategoryId = productItem.CategoryId.Where(cat => !categoryIds.Contains(cat)).ToArray();
+            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem));
+        }
     }
 }

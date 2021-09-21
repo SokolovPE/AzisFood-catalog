@@ -25,17 +25,20 @@ namespace Catalog.Controllers
         where TDto: IDto
         where TRequestDto: IRequestDto
     {
-        private readonly ILogger<BaseController<T, TDto, TRequestDto>> _logger;
+        /// <summary>
+        /// Log operator
+        /// </summary>
+        protected readonly ILogger<BaseController<T, TDto, TRequestDto>> ControllerLogger;
         private readonly IService<T, TDto, TRequestDto> _service;
         
         /// <summary>
         /// Constructs base controller
         /// </summary>
-        /// <param name="logger">Logger service</param>
+        /// <param name="controllerLogger">Logger service</param>
         /// <param name="service">Service to work with entity</param>
-        protected BaseController(ILogger<BaseController<T, TDto, TRequestDto>> logger, IService<T, TDto, TRequestDto> service)
+        protected BaseController(ILogger<BaseController<T, TDto, TRequestDto>> controllerLogger, IService<T, TDto, TRequestDto> service)
         {
-            _logger = logger;
+            ControllerLogger = controllerLogger;
             _service = service;
         }
         
@@ -55,8 +58,8 @@ namespace Catalog.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                ControllerLogger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         
@@ -81,8 +84,8 @@ namespace Catalog.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                ControllerLogger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         
@@ -108,8 +111,8 @@ namespace Catalog.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                ControllerLogger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         
@@ -136,8 +139,8 @@ namespace Catalog.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                ControllerLogger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         
@@ -163,8 +166,8 @@ namespace Catalog.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                ControllerLogger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
         

@@ -11,8 +11,8 @@ namespace Catalog.Controllers
     public class IngredientController : BaseController<Ingredient, IngredientDto, IngredientRequestDto>
     {
         /// <inheritdoc />
-        public IngredientController(ILogger<IngredientController> logger,
-            IService<Ingredient, IngredientDto, IngredientRequestDto> service) : base(logger,
+        public IngredientController(ILogger<IngredientController> controllerLogger,
+            IService<Ingredient, IngredientDto, IngredientRequestDto> service) : base(controllerLogger,
             service)
         {
         }
