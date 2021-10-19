@@ -3,8 +3,8 @@ using System.Reflection;
 using AzisFood.CacheService.Redis.Extensions;
 using AzisFood.DataEngine.Mongo.Extensions;
 using AzisFood.MQ.Rabbit.Extensions;
+using Catalog.Core;
 using Catalog.DataAccess.Models;
-using Catalog.Extensions;
 using Catalog.Worker.Consumers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +29,7 @@ namespace Catalog.Worker
                     var configuration = configBuilder.Build();
                     
                     // Add open tracing with Jaeger
-                    services.AddOpenTracing();
+                    services.AddJaeger(configuration);
                     
                     // Add Redis config
                     services.AddRedisSupport(configuration);
@@ -39,6 +39,7 @@ namespace Catalog.Worker
 
                     // Register mappings
                     services.AddMapper();
+                    
                     
                     // Registrations
                     services.AddCoreServices();

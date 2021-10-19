@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using AzisFood.DataEngine.Interfaces;
 using Catalog.Sdk.Models;
@@ -19,43 +20,49 @@ namespace Catalog.Core.Services.Interfaces
         /// <summary>
         /// Get all entities presented in catalog
         /// </summary>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>List of entities</returns>
-        Task<List<TDto>> GetAllAsync();
+        Task<List<TDto>> GetAllAsync(CancellationToken token = default);
 
         /// <summary>
         /// Get entities from catalog by id
         /// </summary>
         /// <param name="id">Identifier of entity</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Instance of entity</returns>
-        Task<TDto> GetByIdAsync(string id);
+        Task<TDto> GetByIdAsync(string id, CancellationToken token = default);
 
         /// <summary>
         /// Add new entity to catalog
         /// </summary>
         /// <param name="product">Entity to add</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Insertion result</returns>
-        Task<TDto> AddAsync(TRequestDto product);
+        Task<TDto> AddAsync(TRequestDto product, CancellationToken token = default);
 
         /// <summary>
         /// Update entity in catalog
         /// </summary>
         /// <param name="id">Identifier of entity to be updated</param>
         /// <param name="product">Entity to be updated</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Insertion result</returns>
-        Task UpdateAsync(string id, TRequestDto product);
+        Task UpdateAsync(string id, TRequestDto product, CancellationToken token = default);
 
         /// <summary>
         /// Delete entity from catalog
         /// </summary>
         /// <param name="id">Identifier of entity to be deleted</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Deletion result</returns>
-        Task<T> DeleteAsync(string id);
+        Task<T> DeleteAsync(string id, CancellationToken token = default);
 
         /// <summary>
         /// Delete entities from catalog
         /// </summary>
         /// <param name="ids">Array with identifiers of entities to be deleted</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Deletion result</returns>
-        Task DeleteAsync(string[] ids);
+        Task DeleteAsync(string[] ids, CancellationToken token = default);
     }
 }

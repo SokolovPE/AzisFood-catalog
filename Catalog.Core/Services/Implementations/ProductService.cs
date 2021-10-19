@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AzisFood.DataEngine.Interfaces;
@@ -31,7 +32,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public override async Task<ProductDto> AddAsync(ProductRequestDto item)
+        public override async Task<ProductDto> AddAsync(ProductRequestDto item, CancellationToken token = default)
         {
             try
             {
@@ -41,8 +42,13 @@ namespace Catalog.Core.Services.Implementations
                 {
                     throw new ValidationException(validationMessage);
                 }
-                var insertedItem = await Repository.CreateAsync(itemToInsert);
+                var insertedItem = await Repository.CreateAsync(itemToInsert, token);
                 return Mapper.Map<ProductDto>(insertedItem);
+            }
+            catch (OperationCanceledException)
+            {
+                // Throw cancelled operation, do not catch
+                throw;
             }
             catch (Exception e)
             {
@@ -52,9 +58,9 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task DeleteIngredients(IEnumerable<string> ingredientIds)
+        public async Task DeleteIngredients(IEnumerable<string> ingredientIds, CancellationToken token = default)
         {
-            var products = await Repository.GetAsync();
+            var products = await Repository.GetAsync(token);
             var productsToUpdate = products.Where(p =>
                 p.Ingredients.Select(i => i.IngredientId).Intersect(ingredientIds.ToImmutableList()).Any());
             var toUpdate = productsToUpdate as Product[] ?? productsToUpdate.ToArray();
@@ -64,8 +70,13 @@ namespace Catalog.Core.Services.Implementations
                 {
                     product.Ingredients = product.Ingredients
                         .Where(p => !ingredientIds.Contains(p.IngredientId));
-                    await Repository.UpdateAsync(product.Id, product);
+                    await Repository.UpdateAsync(product.Id, product, token);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                // Throw cancelled operation, do not catch
+                throw;
             }
             catch (Exception e)
             {
@@ -76,27 +87,30 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task SetCategories(string productId, IEnumerable<string> categoryIds)
+        public async Task SetCategories(string productId, IEnumerable<string> categoryIds,
+            CancellationToken token = default)
         {
-            var productItem = await GetByIdAsync(productId);
+            var productItem = await GetByIdAsync(productId, token);
             productItem.CategoryId = categoryIds.ToArray();
-            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem));
-        }
-        
-        /// <inheritdoc />
-        public async Task AssignCategories(string productId, IEnumerable<string> categoryIds)
-        {
-            var productItem = await GetByIdAsync(productId);
-            productItem.CategoryId = productItem.CategoryId.Concat(categoryIds).ToArray();
-            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem));
+            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem), token);
         }
 
         /// <inheritdoc />
-        public async Task RetainCategories(string productId, IEnumerable<string> categoryIds)
+        public async Task AssignCategories(string productId, IEnumerable<string> categoryIds,
+            CancellationToken token = default)
         {
-            var productItem = await GetByIdAsync(productId);
+            var productItem = await GetByIdAsync(productId, token);
+            productItem.CategoryId = productItem.CategoryId.Concat(categoryIds).ToArray();
+            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem), token);
+        }
+
+        /// <inheritdoc />
+        public async Task RetainCategories(string productId, IEnumerable<string> categoryIds,
+            CancellationToken token = default)
+        {
+            var productItem = await GetByIdAsync(productId, token);
             productItem.CategoryId = productItem.CategoryId.Where(cat => !categoryIds.Contains(cat)).ToArray();
-            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem));
+            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem), token);
         }
     }
 }

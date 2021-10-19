@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using AzisFood.DataEngine.Interfaces;
 using Catalog.Core.Services.Interfaces;
@@ -45,15 +46,16 @@ namespace Catalog.Controllers
         /// <summary>
         /// Get all entities
         /// </summary>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>List of Dto of entity</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<TDto>>> Get()
+        public async Task<ActionResult<List<TDto>>> Get(CancellationToken token)
         {
             try
             {
-                var data = await _service.GetAllAsync();
+                var data = await _service.GetAllAsync(token);
                 return data;
             }
             catch (Exception e)
@@ -67,16 +69,17 @@ namespace Catalog.Controllers
         /// Get entity from database by id
         /// </summary>
         /// <param name="id">Id of entity to get</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns></returns>
         [HttpGet("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TDto>> Get(string id)
+        public async Task<ActionResult<TDto>> Get(string id, CancellationToken token)
         {
             try
             {
-                return await _service.GetByIdAsync(id);
+                return await _service.GetByIdAsync(id, token);
             }
             catch (KeyNotFoundException e)
             {
@@ -93,16 +96,17 @@ namespace Catalog.Controllers
         /// Create a new entity
         /// </summary>
         /// <param name="item">Model of new entity</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Model of entity, created on the database</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<T>> Create(TRequestDto item)
+        public async Task<ActionResult<T>> Create(TRequestDto item, CancellationToken token)
         {
             try
             {
-                var insertedItem = await _service.AddAsync(item);
+                var insertedItem = await _service.AddAsync(item, token);
                 return Created(Request.GetDisplayUrl(), insertedItem);
             }
             catch (InvalidConstraintException e)
@@ -121,16 +125,17 @@ namespace Catalog.Controllers
         /// </summary>
         /// <param name="id">Identifier of entity</param>
         /// <param name="itemIn">New model of entity</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Indicates success or fail of operation</returns>
         [HttpPut("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(string id, [FromBody] TRequestDto itemIn)
+        public async Task<IActionResult> Update(string id, [FromBody] TRequestDto itemIn, CancellationToken token)
         {
             try
             {
-                await _service.UpdateAsync(id, itemIn);
+                await _service.UpdateAsync(id, itemIn, token);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -148,16 +153,17 @@ namespace Catalog.Controllers
         /// Delete entity from database
         /// </summary>
         /// <param name="id">Identifier of entity</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Indicates success or fail of operation</returns>
         [HttpDelete("{id:length(24)}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id, CancellationToken token)
         {
             try
             {
-                var item = await _service.DeleteAsync(id);
+                var item = await _service.DeleteAsync(id, token);
                 return Ok($"Successfully deleted [{item.Id}]");
             }
             catch (KeyNotFoundException)
@@ -175,12 +181,13 @@ namespace Catalog.Controllers
         /// Delete entity from database
         /// </summary>
         /// <param name="ids">Array of entity identifiers</param>
+        /// <param name="token">Token for operation cancel</param>
         /// <returns>Indicates success or fail of operation</returns>
         [HttpDelete("DeleteMany")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteMany([FromBody] string[] ids)
+        public async Task<IActionResult> DeleteMany([FromBody] string[] ids, CancellationToken token)
         {
-            await _service.DeleteAsync(ids);
+            await _service.DeleteAsync(ids, token);
             return Ok($"Successfully deleted {ids.Length} item(s)");
         }
     }

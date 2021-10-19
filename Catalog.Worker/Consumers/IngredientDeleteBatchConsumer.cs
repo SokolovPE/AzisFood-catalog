@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AzisFood.CacheService.Redis.Interfaces;
 using AzisFood.DataEngine.Interfaces;
 using AzisFood.MQ.Abstractions.Models;
 using Catalog.Core.Services.Interfaces;
@@ -10,6 +11,7 @@ using MassTransit;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace Catalog.Worker.Consumers
 {
@@ -18,13 +20,15 @@ namespace Catalog.Worker.Consumers
         private readonly IProductService _productService;
         private readonly ICacheOperator<Ingredient> _ingredientCacheOperator;
         private readonly ICacheOperator<Product> _productCacheOperator;
+        private readonly IRedisCacheService _redisCacheService;
 
         public IngredientDeleteBatchConsumer(IProductService productService,
-            ICacheOperator<Ingredient> ingredientCacheOperator, ICacheOperator<Product> productCacheOperator)
+            ICacheOperator<Ingredient> ingredientCacheOperator, ICacheOperator<Product> productCacheOperator, IRedisCacheService redisCacheService)
         {
             _productService = productService;
             _ingredientCacheOperator = ingredientCacheOperator;
             _productCacheOperator = productCacheOperator;
+            _redisCacheService = redisCacheService;
         }
         public async Task Consume(ConsumeContext<Batch<BusSignal>> context)
         {
@@ -35,7 +39,8 @@ namespace Catalog.Worker.Consumers
             if (ingredientIds.Any())
             {
                 await _productService.DeleteIngredients(ingredientIds);
-                await _ingredientCacheOperator.FullRecache(TimeSpan.FromDays(1));
+                var keys = ingredientIds.Select(x => new RedisValue(x)).ToArray();
+                await _redisCacheService.HashRemoveManyAsync<Ingredient>(keys, CommandFlags.None);
                 await _productCacheOperator.FullRecache(TimeSpan.FromDays(1));
             }
         }
