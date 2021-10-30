@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Catalog.Sdk.Models
 {
     /// <summary>
@@ -7,5 +9,9 @@ namespace Catalog.Sdk.Models
     {
         public string IngredientId { get; set; }
         public decimal Amount { get; set; }
+        public override string ToString()
+        {
+            return $"id: {IngredientId}, amount: {Amount.ToString(CultureInfo.InvariantCulture)}";
+        }
     }
 }

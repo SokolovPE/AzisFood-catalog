@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -95,20 +96,32 @@ namespace Catalog.Core.Services.Implementations
         public async Task SetCategories(string productId, IEnumerable<string> categoryIds,
             CancellationToken token = default)
         {
-            //TODO: filter existing only
+            var (existingCategories, notFoundCategories) =
+                await ValidateCategories(categoryIds.ToArray(), token);
             var productItem = await GetEntityByIdAsync(productId, token);
-            productItem.CategoryId = categoryIds.ToArray();
+            productItem.CategoryId = existingCategories;
             await Repository.UpdateAsync(productId, productItem, token);
+            if (notFoundCategories.Length > 0)
+            {
+                Logger.LogWarning(
+                    $"Attempt to set categories, which are not present on server: {string.Join(',', notFoundCategories)}, product: {productId}");
+            }
         }
 
         /// <inheritdoc />
         public async Task AssignCategories(string productId, IEnumerable<string> categoryIds,
             CancellationToken token = default)
         {
-            //TODO: filter existing only
+            var (existingCategories, notFoundCategories) =
+                await ValidateCategories(categoryIds.ToArray(), token);
             var productItem = await GetEntityByIdAsync(productId, token);
-            productItem.CategoryId = productItem.CategoryId.Concat(categoryIds).ToArray();
+            productItem.CategoryId = productItem.CategoryId.Concat(existingCategories).ToArray();
             await Repository.UpdateAsync(productId, productItem, token);
+            if (notFoundCategories.Length > 0)
+            {
+                Logger.LogWarning(
+                    $"Attempt to assign categories, which are not present on server: {string.Join(',', notFoundCategories)}, product: {productId}");
+            }
         }
 
         /// <inheritdoc />
@@ -124,21 +137,33 @@ namespace Catalog.Core.Services.Implementations
         public async Task SetIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
             CancellationToken token = default)
         {
-            //TODO: filter existing only
+            var (existingCategories, notFoundCategories) =
+                await ValidateIngredients(ingredientUsages, token);
             var productItem = await GetEntityByIdAsync(productId, token);
-            productItem.Ingredients = Mapper.Map<IEnumerable<IngredientUsage>>(ingredientUsages).ToArray();
+            productItem.Ingredients = Mapper.Map<IEnumerable<IngredientUsage>>(existingCategories).ToArray();
             await Repository.UpdateAsync(productId, productItem, token);
+            if (notFoundCategories.Length > 0)
+            {
+                Logger.LogWarning(
+                    $"Attempt to set usage of ingredients, which are not present on server: {string.Join(',', notFoundCategories.Select(x => x.ToString()))}, product: {productId}");
+            }
         }
 
         /// <inheritdoc />
         public async Task AssignIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
             CancellationToken token = default)
         {
-            //TODO: filter existing only
+            var (existingCategories, notFoundCategories) =
+                await ValidateIngredients(ingredientUsages, token);
             var productItem = await GetEntityByIdAsync(productId, token);
-            var usages = Mapper.Map<IEnumerable<IngredientUsage>>(ingredientUsages).ToArray();
+            var usages = Mapper.Map<IEnumerable<IngredientUsage>>(existingCategories).ToArray();
             productItem.Ingredients = productItem.Ingredients.Concat(usages).ToArray();
             await Repository.UpdateAsync(productId, productItem, token);
+            if (notFoundCategories.Length > 0)
+            {
+                Logger.LogWarning(
+                    $"Attempt to assign usage of ingredients, which are not present on server: {string.Join(',', notFoundCategories.Select(x => x.ToString()))}, product: {productId}");
+            }
         }
 
         /// <inheritdoc />
@@ -149,6 +174,47 @@ namespace Catalog.Core.Services.Implementations
             productItem.Ingredients = productItem.Ingredients.Where(cat => !ingredientIds.Contains(cat.IngredientId))
                 .ToArray();
             await Repository.UpdateAsync(productId, productItem, token);
+        }
+
+        /// <summary>
+        /// Split categories into two arrays, which exists at server and which not
+        /// </summary>
+        /// <param name="inputCategories">Categories to check</param>
+        /// <param name="token">Token to cancel operation</param>
+        private async Task<(string[] found, string[] notFound)> ValidateCategories(string[] inputCategories,
+            CancellationToken token = default)
+        {
+            var existingCategories =
+                (await _categoryRepository.GetHashAsync(c => inputCategories.Contains(c.Id), token))
+                .Select(x => x.Id)
+                .ToArray();
+            var notFoundCategories = inputCategories.Except(existingCategories).ToArray();
+            return (existingCategories, notFoundCategories);
+        }
+
+        /// <summary>
+        /// Split ingredients into two arrays, which exists at server and which not
+        /// </summary>
+        /// <param name="inputIngredients">Ingredients to check</param>
+        /// <param name="token">Token to cancel operation</param>
+        private async Task<(IngredientUsageDto[] found, IngredientUsageDto[] notFound)> ValidateIngredients(
+            IEnumerable<IngredientUsageDto> inputIngredients,
+            CancellationToken token = default)
+        {
+            var input = inputIngredients.ToArray();
+            var inputIngredientIds = input.Select(x => x.IngredientId).ToArray();
+            var existingIngredientIds =
+                (await _ingredientRepository.GetHashAsync(i => inputIngredientIds.Contains(i.Id), token))
+                .Select(x => x.Id)
+                .ToArray();
+            var notFoundIngredientIds = inputIngredientIds.Except(existingIngredientIds).ToArray();
+
+            var existingIngredients = 
+                input.Where(x => existingIngredientIds.Contains(x.IngredientId)).ToArray();
+            var notFoundIngredients = 
+                input.Where(x => notFoundIngredientIds.Contains(x.IngredientId)).ToArray();
+            
+            return (existingIngredients, notFoundIngredients);
         }
     }
 }
