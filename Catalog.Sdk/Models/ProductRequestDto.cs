@@ -5,7 +5,7 @@ namespace Catalog.Sdk.Models
     /// <summary>
     /// Request data transfer object for product
     /// </summary>
-    public class ProductRequestDto : IRequestDto
+    public record ProductRequestDto : IRequestDto
     {
         /// <summary>
         /// Title of product

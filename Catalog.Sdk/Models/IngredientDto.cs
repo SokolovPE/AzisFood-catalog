@@ -3,7 +3,7 @@
     /// <summary>
     /// Data transfer object for ingredient
     /// </summary>
-    public class IngredientDto : IngredientRequestDto, IDto
+    public record IngredientDto : IngredientRequestDto, IDto
     {
         /// <summary>
         /// Identifier of ingredient

@@ -3,7 +3,7 @@ namespace Catalog.Sdk.Models
     /// <summary>
     /// Request data transfer object for category
     /// </summary>
-    public class CategoryRequestDto : IRequestDto
+    public record CategoryRequestDto : IRequestDto
     {
         /// <summary>
         /// Title of product

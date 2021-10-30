@@ -52,7 +52,7 @@ namespace Catalog.DataAccess.Models
         /// <summary>
         /// Ingredients product made of
         /// </summary>
-        public IEnumerable<IngredientUsage> Ingredients { get; set; }
+        public IngredientUsage[] Ingredients { get; set; }
         
         /// <summary>
         /// Options available for product

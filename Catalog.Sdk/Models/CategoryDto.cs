@@ -3,7 +3,7 @@ namespace Catalog.Sdk.Models
     /// <summary>
     /// Data transfer object for category
     /// </summary>
-    public class CategoryDto : CategoryRequestDto, IDto
+    public record CategoryDto : CategoryRequestDto, IDto
     {
         /// <summary>
         /// Identifier of category

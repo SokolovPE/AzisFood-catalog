@@ -1,6 +1,6 @@
 namespace Catalog.Sdk.Models
 {
-    public class NutritionFactDto
+    public record NutritionFactDto
     {
         // Energy in kJoules
         public double Energy { get; set; }

@@ -20,15 +20,20 @@ namespace Catalog.Core.Services.Implementations
     public class ProductService : BaseService<Product, ProductDto, ProductRequestDto>, IProductService
     {
         private readonly IValidatorService<Product> _validator;
+        private readonly ICachedBaseRepository<Ingredient> _ingredientRepository;
+        private readonly ICachedBaseRepository<Category> _categoryRepository;
 
         /// <inheritdoc />
         public ProductService(ILogger<ProductService> logger,
             IMapper mapper,
             ICachedBaseRepository<Product> repository,
-            IValidatorService<Product> validator) 
+            IValidatorService<Product> validator, ICachedBaseRepository<Ingredient> ingredientRepository,
+            ICachedBaseRepository<Category> categoryRepository)
             : base(logger, mapper, repository)
         {
             _validator = validator;
+            _ingredientRepository = ingredientRepository;
+            _categoryRepository = categoryRepository;
         }
 
         /// <inheritdoc />
@@ -69,7 +74,7 @@ namespace Catalog.Core.Services.Implementations
                 foreach (var product in toUpdate)
                 {
                     product.Ingredients = product.Ingredients
-                        .Where(p => !ingredientIds.Contains(p.IngredientId));
+                        .Where(p => !ingredientIds.Contains(p.IngredientId)).ToArray();
                     await Repository.UpdateAsync(product.Id, product, token);
                 }
             }
@@ -90,27 +95,60 @@ namespace Catalog.Core.Services.Implementations
         public async Task SetCategories(string productId, IEnumerable<string> categoryIds,
             CancellationToken token = default)
         {
-            var productItem = await GetByIdAsync(productId, token);
+            //TODO: filter existing only
+            var productItem = await GetEntityByIdAsync(productId, token);
             productItem.CategoryId = categoryIds.ToArray();
-            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem), token);
+            await Repository.UpdateAsync(productId, productItem, token);
         }
 
         /// <inheritdoc />
         public async Task AssignCategories(string productId, IEnumerable<string> categoryIds,
             CancellationToken token = default)
         {
-            var productItem = await GetByIdAsync(productId, token);
+            //TODO: filter existing only
+            var productItem = await GetEntityByIdAsync(productId, token);
             productItem.CategoryId = productItem.CategoryId.Concat(categoryIds).ToArray();
-            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem), token);
+            await Repository.UpdateAsync(productId, productItem, token);
         }
 
         /// <inheritdoc />
         public async Task RetainCategories(string productId, IEnumerable<string> categoryIds,
             CancellationToken token = default)
         {
-            var productItem = await GetByIdAsync(productId, token);
+            var productItem = await GetEntityByIdAsync(productId, token);
             productItem.CategoryId = productItem.CategoryId.Where(cat => !categoryIds.Contains(cat)).ToArray();
-            await Repository.UpdateAsync(productId, Mapper.Map<Product>(productItem), token);
+            await Repository.UpdateAsync(productId, productItem, token);
+        }
+
+        /// <inheritdoc />
+        public async Task SetIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
+            CancellationToken token = default)
+        {
+            //TODO: filter existing only
+            var productItem = await GetEntityByIdAsync(productId, token);
+            productItem.Ingredients = Mapper.Map<IEnumerable<IngredientUsage>>(ingredientUsages).ToArray();
+            await Repository.UpdateAsync(productId, productItem, token);
+        }
+
+        /// <inheritdoc />
+        public async Task AssignIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
+            CancellationToken token = default)
+        {
+            //TODO: filter existing only
+            var productItem = await GetEntityByIdAsync(productId, token);
+            var usages = Mapper.Map<IEnumerable<IngredientUsage>>(ingredientUsages).ToArray();
+            productItem.Ingredients = productItem.Ingredients.Concat(usages).ToArray();
+            await Repository.UpdateAsync(productId, productItem, token);
+        }
+
+        /// <inheritdoc />
+        public async Task RetainIngredients(string productId, IEnumerable<string> ingredientIds,
+            CancellationToken token = default)
+        {
+            var productItem = await GetEntityByIdAsync(productId, token);
+            productItem.Ingredients = productItem.Ingredients.Where(cat => !ingredientIds.Contains(cat.IngredientId))
+                .ToArray();
+            await Repository.UpdateAsync(productId, productItem, token);
         }
     }
 }

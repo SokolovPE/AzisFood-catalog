@@ -3,7 +3,7 @@
     /// <summary>
     /// Data transfer object for product
     /// </summary>
-    public class ProductDto : ProductRequestDto, IDto
+    public record ProductDto : ProductRequestDto, IDto
     {
         /// <summary>
         /// Identifier of product

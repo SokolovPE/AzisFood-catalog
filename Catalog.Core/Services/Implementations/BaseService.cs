@@ -17,7 +17,7 @@ namespace Catalog.Core.Services.Implementations
     /// <typeparam name="TDto">Type of entity Dto</typeparam>
     /// <typeparam name="TRequestDto">Type of entity request Dto</typeparam>
     public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
-        where T: IRepoEntity 
+        where T: class, IRepoEntity
         where TDto: IDto
         where TRequestDto: IRequestDto
     {
@@ -90,9 +90,21 @@ namespace Catalog.Core.Services.Implementations
         /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
         public virtual async Task<TDto> GetByIdAsync(string id, CancellationToken token = default)
         {
-            var item = await Repository.GetHashAsync(id, token);
+            var item = await GetEntityByIdAsync(id, token);
+            return Mapper.Map<TDto>(item);
+        }
 
-            if (item != null) return Mapper.Map<TDto>(item);
+        /// <summary>
+        /// Get single element from entity collection by id
+        /// </summary>
+        /// <param name="id">Identifier of element</param>
+        /// <param name="token">Token for operation cancel</param>
+        /// <returns>Entity element</returns>
+        /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
+        protected async Task<T> GetEntityByIdAsync(string id, CancellationToken token = default)
+        {
+            var item = await Repository.GetHashAsync(id, token);
+            if (item != default) return item;
 
             var msg = $"Requested {EntityName} with id: {id} was not found in catalog.";
             Logger.LogWarning(msg);

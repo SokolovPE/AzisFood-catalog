@@ -3,7 +3,7 @@
     /// <summary>
     /// Request data transfer object for ingredient
     /// </summary>
-    public class IngredientRequestDto : IRequestDto
+    public record IngredientRequestDto : IRequestDto
     {
         /// <summary>
         /// Title of ingredient
