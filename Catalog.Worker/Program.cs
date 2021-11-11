@@ -51,6 +51,7 @@ namespace Catalog.Worker
                         // Add consumers and re-cache entities
                         config.AddConsumer<Product>(tempServiceProvider);
                         config.AddConsumer<Ingredient>(tempServiceProvider);
+                        config.AddConsumer<Option>(tempServiceProvider);
                         config.AddConsumer<Category>(tempServiceProvider);
                         config.AddConsumer<IngredientDeleteBatchConsumer>(
                              typeof(IngredientDeleteBatchConsumerDefinition));

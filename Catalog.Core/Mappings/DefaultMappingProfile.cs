@@ -26,6 +26,12 @@ namespace Catalog.Core.Mappings
             CreateMap<IngredientDto, IngredientRequestDto>().ReverseMap();
             #endregion
             
+            #region Option
+            CreateMap<Option, OptionDto>().ReverseMap();
+            CreateMap<Option, OptionRequestDto>().ReverseMap();
+            CreateMap<OptionDto, OptionRequestDto>().ReverseMap();
+            #endregion
+            
             #region Category
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Category, CategoryRequestDto>().ReverseMap();

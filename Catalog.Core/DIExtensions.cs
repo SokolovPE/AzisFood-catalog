@@ -88,6 +88,10 @@ namespace Catalog.Core
             services.AddTransient(typeof(IService<Ingredient, IngredientDto, IngredientRequestDto>),
                 typeof(BaseService<Ingredient, IngredientDto, IngredientRequestDto>));
             
+            // Option service
+            services.AddTransient(typeof(IService<Option, OptionDto, OptionRequestDto>),
+                typeof(BaseService<Option, OptionDto, OptionRequestDto>));
+            
             // Category service
             services.AddTransient(typeof(IService<Category, CategoryDto, CategoryRequestDto>),
                 typeof(BaseService<Category, CategoryDto, CategoryRequestDto>));

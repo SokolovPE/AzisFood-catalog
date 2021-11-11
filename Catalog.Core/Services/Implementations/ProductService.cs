@@ -23,18 +23,20 @@ namespace Catalog.Core.Services.Implementations
         private readonly IValidatorService<Product> _validator;
         private readonly ICachedBaseRepository<Ingredient> _ingredientRepository;
         private readonly ICachedBaseRepository<Category> _categoryRepository;
+        private readonly ICachedBaseRepository<Option> _optionRepository;
 
         /// <inheritdoc />
         public ProductService(ILogger<ProductService> logger,
             IMapper mapper,
             ICachedBaseRepository<Product> repository,
             IValidatorService<Product> validator, ICachedBaseRepository<Ingredient> ingredientRepository,
-            ICachedBaseRepository<Category> categoryRepository)
+            ICachedBaseRepository<Category> categoryRepository, ICachedBaseRepository<Option> optionRepository)
             : base(logger, mapper, repository)
         {
             _validator = validator;
             _ingredientRepository = ingredientRepository;
             _categoryRepository = categoryRepository;
+            _optionRepository = optionRepository;
         }
 
         /// <inheritdoc />
@@ -175,6 +177,44 @@ namespace Catalog.Core.Services.Implementations
                 .ToArray();
             await Repository.UpdateAsync(productId, productItem, token);
         }
+        
+        /// <inheritdoc />
+        public async Task SetOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default)
+        {
+            var (existingOptions, notFoundOptions) =
+                await ValidateOptions(optionIds.ToArray(), token);
+            var productItem = await GetEntityByIdAsync(productId, token);
+            productItem.OptionId = existingOptions;
+            await Repository.UpdateAsync(productId, productItem, token);
+            if (notFoundOptions.Length > 0)
+            {
+                Logger.LogWarning(
+                    $"Attempt to set options, which are not present on server: {string.Join(',', notFoundOptions)}, product: {productId}");
+            }
+        }
+        
+        /// <inheritdoc />
+        public async Task AssignOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default)
+        {
+            var (existingOptions, notFoundOptions) =
+                await ValidateOptions(optionIds.ToArray(), token);
+            var productItem = await GetEntityByIdAsync(productId, token);
+            productItem.OptionId = productItem.CategoryId.Concat(existingOptions).ToArray();
+            await Repository.UpdateAsync(productId, productItem, token);
+            if (notFoundOptions.Length > 0)
+            {
+                Logger.LogWarning(
+                    $"Attempt to assign options, which are not present on server: {string.Join(',', notFoundOptions)}, product: {productId}");
+            }
+        }
+        
+        /// <inheritdoc />
+        public async Task RetainOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default)
+        {
+            var productItem = await GetEntityByIdAsync(productId, token);
+            productItem.CategoryId = productItem.OptionId.Where(cat => !optionIds.Contains(cat)).ToArray();
+            await Repository.UpdateAsync(productId, productItem, token);
+        }
 
         /// <summary>
         /// Split categories into two arrays, which exists at server and which not
@@ -215,6 +255,22 @@ namespace Catalog.Core.Services.Implementations
                 input.Where(x => notFoundIngredientIds.Contains(x.IngredientId)).ToArray();
             
             return (existingIngredients, notFoundIngredients);
+        }
+        
+        /// <summary>
+        /// Split options into two arrays, which exists at server and which not
+        /// </summary>
+        /// <param name="inputOptions">Options to check</param>
+        /// <param name="token">Token to cancel operation</param>
+        private async Task<(string[] found, string[] notFound)> ValidateOptions(string[] inputOptions,
+            CancellationToken token = default)
+        {
+            var existingOptions =
+                (await _optionRepository.GetHashAsync(c => inputOptions.Contains(c.Id), token))
+                .Select(x => x.Id)
+                .ToArray();
+            var notFoundOptions = inputOptions.Except(existingOptions).ToArray();
+            return (existingOptions, notFoundOptions);
         }
     }
 }

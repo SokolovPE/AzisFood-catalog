@@ -1,0 +1,33 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=68b1bc6c_002D41e9_002D441a_002D97d8_002D1ffbd219c1e8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="CheckNameNotEmpty" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CustomerTests.CheckNameNotEmpty&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CustomerTests.CheckLegitForDiscount&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculatorTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CustomerTests.GetOrdersByName_NotNull&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CustomerTests.LoyalCustomerForOrdersG100&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculationsTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CustomerDetailTests.GetFullName_GivenFirstAndLastName_ReturnsFullName&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.Customer.CustomerDetailTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.Customer.CustomerTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.Calculations.CalculationsTests.IsOdd_GivenOddValue_ReturnsTrue&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.Calculations.CalculationsTests.IsOdd_TestOddAndEven&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.Calculations.CalculationsTests.IsOdd_GivenEvenValue_ReturnsFalse&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=795a7b30_002Dc907_002D414a_002Db203_002Dd612e29c7c67/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Add_GivenTwoIntValues_ReturnsInt" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculatorTests.Add_GivenTwoIntValues_ReturnsInt&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculatorTests.AddDouble_GivenTwoDoubleValues_ReturnsDouble&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.NamesTest.MakeFullNameTest&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.NamesTest.Nickname_MustBeNull&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.NamesTest.MakeFullName_AlwaysReturnValue&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.NamesTest.Nickname_MustBeNotNull&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculationsTests.FiboNumbers_DoesNotIncludeZero&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculationsTests.FiboNumbers_InclideThirteen&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculationsTests.FiboNumbers_IncludeThirteen&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculationsTests.FiboNumbers_DoesNotIncludeFour&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CalculationsTests.CheckCollection&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::33821700-D280-4627-89DC-1A3EF8F20EC3::net5.0::Catalog.Tests.CustomerTests.CheckLegitForDiscount&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

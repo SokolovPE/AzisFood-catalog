@@ -42,6 +42,14 @@ namespace Catalog
         /// <param name="services">Collection of services</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o =>
+            {
+                o.AddPolicy("_myAllowSpecificOrigins", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+            
             services.AddControllers();
             
             // Register mappings
@@ -78,6 +86,7 @@ namespace Catalog
         /// <param name="env">IWebHostEnvironment</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(o => o.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

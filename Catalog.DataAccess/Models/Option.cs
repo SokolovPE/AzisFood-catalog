@@ -1,10 +1,16 @@
-﻿using AzisFood.DataEngine.Mongo.Models;
+﻿using AzisFood.CacheService.Abstractions.Models;
+using AzisFood.DataEngine.Mongo.Models;
+using AzisFood.MQ.Abstractions.Attributes;
+using AzisFood.MQ.Abstractions.Models;
 
 namespace Catalog.DataAccess.Models
 {
     /// <summary>
     /// Model of product option
     /// </summary>
+    [BusTopic(Name = "option", Events = new [] {EventType.Deleted, EventType.Recache})]
+    // Key for demonstration how to define own name for HashSet, by default h_TypeName
+    [HashKey(Key = "h_Option")]
     public class Option : MongoRepoEntity
     {
         /// <summary>
