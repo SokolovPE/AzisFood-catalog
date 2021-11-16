@@ -39,6 +39,29 @@ namespace Catalog.Core.Services.Implementations
             _optionRepository = optionRepository;
         }
 
+
+        /// <inheritdoc />
+        public async Task<ProductDto[]> GetProductsInCategory(string categoryId, CancellationToken token = default)
+        {
+            try
+            {
+                var items = 
+                    await Repository.GetHashAsync(product => product.CategoryId.Contains(categoryId), token);
+                return Mapper.Map<ProductDto[]>(items);
+            }
+            catch (OperationCanceledException)
+            {
+                // Throw cancelled operation, do not catch
+                throw;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e,
+                    $"Exception during attempt to get {EntityName} filtered by category {categoryId} from catalog");
+                throw;
+            }
+        }
+        
         /// <inheritdoc />
         public override async Task<ProductDto> AddAsync(ProductRequestDto item, CancellationToken token = default)
         {

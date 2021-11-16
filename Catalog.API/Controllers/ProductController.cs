@@ -30,6 +30,33 @@ namespace Catalog.Controllers
         {
             _productService = service;
         }
+        
+        /// <summary>
+        /// Get entity from database by id
+        /// </summary>
+        /// <param name="id">Id of entity to get</param>
+        /// <param name="token">Token for operation cancel</param>
+        /// <returns></returns>
+        [HttpGet("Category/{id:length(24)}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProductDto[]>> GetInCategory(string id, CancellationToken token)
+        {
+            try
+            {
+                return await _productService.GetProductsInCategory(id, token);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                ControllerLogger.LogError(e, e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
 
         /// <summary>
         /// Set categories to product, will replace existing ones

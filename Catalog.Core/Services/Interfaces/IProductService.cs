@@ -10,6 +10,14 @@ namespace Catalog.Core.Services.Interfaces
     public interface IProductService : IService<Product, ProductDto, ProductRequestDto>
     {
         /// <summary>
+        /// Get products in provided category
+        /// </summary>
+        /// <param name="categoryId">Id of category to search for</param>
+        /// <param name="token">Token for operation cancel</param>
+        /// <returns>List of products in provided category</returns>
+        Task<ProductDto[]> GetProductsInCategory(string categoryId, CancellationToken token = default);
+        
+        /// <summary>
         /// Delete listed ingredients from all products
         /// </summary>
         /// <param name="ingredientIds">Identifiers of ingredient to be removed</param>
