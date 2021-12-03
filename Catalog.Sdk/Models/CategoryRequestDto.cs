@@ -14,5 +14,10 @@ namespace Catalog.Sdk.Models
         /// Possible subcategories
         /// </summary>
         public string[] SubCategories { get; set; }
+        
+        /// <summary>
+        /// Order of category
+        /// </summary>
+        public int Order { get; set; }
     }
 }

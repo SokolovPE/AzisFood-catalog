@@ -11,7 +11,7 @@ namespace Catalog.DataAccess.Models
     public class Category: MongoRepoEntity
     {
         /// <summary>
-        /// Title of product
+        /// Title of category
         /// </summary>
         public string Title { get; set; }
         
@@ -19,5 +19,10 @@ namespace Catalog.DataAccess.Models
         /// Possible subcategories
         /// </summary>
         public string[] SubCategories { get; set; }
+        
+        /// <summary>
+        /// Order of category
+        /// </summary>
+        public int Order { get; set; }
     }
 }
