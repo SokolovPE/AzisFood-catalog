@@ -28,7 +28,10 @@ namespace Catalog
         /// <returns><see cref="IHostBuilder"/></returns>
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://localhost:5000", "https://localhost:5001", "http://192.168.1.108:5002",
+                        "https://192.168.1.108:5003");
+                })
                 .UseSerilog();
     }
 }
