@@ -1,21 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <UserSecretsId>dotnet-Catalog.Worker-E3D776E1-3971-4C40-900B-5B4D90A78956</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="AzisFood.MQ.Abstractions" Version="1.0.0.2" />
         <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.2" />
-        <PackageReference Include="MassTransit" Version="7.2.1" />
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.2.1" />
-        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.1" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.1" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-        <PackageReference Include="Jaeger" Version="1.0.2" />
-        <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.7.1" />
+        <PackageReference Include="MassTransit" Version="7.3.0" />
+        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
+        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+        <PackageReference Include="Jaeger" Version="1.0.3" />
+        <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.8.0" />
     </ItemGroup>
 
     <ItemGroup>
