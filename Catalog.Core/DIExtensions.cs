@@ -17,9 +17,10 @@ using OpenTracing;
 namespace Catalog.Core
 {
     /// <summary>
-    /// Extensions for using AutoMapper
+    /// Extensions for dependency injection
     /// </summary>
-    public static class MapperExtensions
+    // ReSharper disable once InconsistentNaming
+    public static class DIExtensions
     {
         /// <summary>
         /// Add Jaeger tracing to application

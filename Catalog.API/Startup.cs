@@ -4,19 +4,13 @@ using AzisFood.DataEngine.Mongo.Extensions;
 using AzisFood.MQ.Rabbit.Extensions;
 using Catalog.Core;
 using Catalog.Extensions;
-using Jaeger;
-using Jaeger.Reporters;
-using Jaeger.Samplers;
-using Jaeger.Senders.Thrift;
+using GraphQL.Server.Ui.Voyager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using OpenTracing;
-using OpenTracing.Contrib.NetCore.Configuration;
 
 namespace Catalog
 {
@@ -76,6 +70,9 @@ namespace Catalog
             
             // Registrations
             services.AddCoreServices();
+            
+            // Add GraphQL
+            services.AddGraphQL();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -99,8 +96,17 @@ namespace Catalog
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapGraphQL();
+            });
+            
+            app.UseGraphQLVoyager(new VoyagerOptions
+            {
+                GraphQLEndPoint = "/graphql"
+            }, "/graphql-voyager");
         }
     }
 }
