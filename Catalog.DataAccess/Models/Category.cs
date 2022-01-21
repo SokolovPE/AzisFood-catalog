@@ -1,5 +1,5 @@
 ﻿using System;
-using AzisFood.CacheService.Abstractions.Models;
+using AzisFood.DataEngine.Core.Attributes;
 using AzisFood.DataEngine.Mongo.Models;
 using AzisFood.MQ.Abstractions.Attributes;
 
@@ -9,6 +9,7 @@ namespace Catalog.DataAccess.Models
     /// Model of product category
     /// </summary>
     [BusTopic(Name = "category")]
+    [ConnectionAlias("catalog")]
     public class Category: MongoRepoEntity
     {
         /// <summary>

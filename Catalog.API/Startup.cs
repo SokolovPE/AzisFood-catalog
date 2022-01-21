@@ -1,5 +1,6 @@
 using System.IO;
 using AzisFood.CacheService.Redis.Extensions;
+using AzisFood.DataEngine.Core;
 using AzisFood.DataEngine.Mongo.Extensions;
 using AzisFood.MQ.Rabbit.Extensions;
 using Catalog.Core;
@@ -63,7 +64,8 @@ namespace Catalog
             services.AddRabbitMQSupport(Configuration);
             
             // Add MongoDb config
-            services.AddMongoDBSupport(Configuration);
+            services
+                .AddMongoSupport(Configuration);
             
             // Add Redis config
             services.AddRedisSupport(Configuration);
