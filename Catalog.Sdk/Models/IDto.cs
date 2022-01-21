@@ -1,4 +1,6 @@
-﻿namespace Catalog.Sdk.Models
+﻿using System;
+
+namespace Catalog.Sdk.Models
 {
     /// <summary>
     /// Some data transfer object
@@ -8,6 +10,6 @@
         /// <summary>
         /// Identifier of object
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AzisFood.CacheService.Redis.Interfaces;
-using AzisFood.DataEngine.Interfaces;
+using AzisFood.DataEngine.Abstractions.Interfaces;
 using AzisFood.MQ.Abstractions.Models;
 using Catalog.Core.Services.Interfaces;
 using Catalog.DataAccess.Models;
@@ -34,12 +34,12 @@ namespace Catalog.Worker.Consumers
         {
             // TODO: Deserialize of string? what? 
             var idsToRemove = context.Message
-                .Select(p => JsonConvert.DeserializeObject<string>(p.Message.Payload));
-            var ingredientIds = idsToRemove as string[] ?? idsToRemove.ToArray();
+                .Select(p => JsonConvert.DeserializeObject<Guid>(p.Message.Payload));
+            var ingredientIds = idsToRemove as Guid[] ?? idsToRemove.ToArray();
             if (ingredientIds.Any())
             {
                 await _productService.DeleteIngredients(ingredientIds);
-                var keys = ingredientIds.Select(x => new RedisValue(x)).ToArray();
+                var keys = ingredientIds.Select(x => new RedisValue(x.ToString())).ToArray();
                 await _redisCacheService.HashRemoveManyAsync<Ingredient>(keys, CommandFlags.None);
                 await _productCacheOperator.FullRecache(TimeSpan.FromDays(1));
             }

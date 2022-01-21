@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AzisFood.DataEngine.Interfaces;
+using AzisFood.DataEngine.Abstractions.Interfaces;
 using Catalog.DataAccess.Models;
 using HotChocolate;
 using HotChocolate.Data;

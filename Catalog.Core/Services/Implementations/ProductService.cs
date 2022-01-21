@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using AzisFood.DataEngine.Interfaces;
+using AzisFood.DataEngine.Abstractions.Interfaces;
 using Catalog.Core.Services.Interfaces;
 using Catalog.DataAccess.Models;
 using Catalog.Sdk.Models;
@@ -41,7 +40,7 @@ namespace Catalog.Core.Services.Implementations
 
 
         /// <inheritdoc />
-        public async Task<ProductDto[]> GetProductsInCategory(string categoryId, CancellationToken token = default)
+        public async Task<ProductDto[]> GetProductsInCategory(Guid categoryId, CancellationToken token = default)
         {
             try
             {
@@ -89,7 +88,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task DeleteIngredients(IEnumerable<string> ingredientIds, CancellationToken token = default)
+        public async Task DeleteIngredients(IEnumerable<Guid> ingredientIds, CancellationToken token = default)
         {
             var products = await Repository.GetAsync(token);
             var productsToUpdate = products.Where(p =>
@@ -118,7 +117,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task SetCategories(string productId, IEnumerable<string> categoryIds,
+        public async Task SetCategories(Guid productId, IEnumerable<Guid> categoryIds,
             CancellationToken token = default)
         {
             var (existingCategories, notFoundCategories) =
@@ -134,7 +133,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task AssignCategories(string productId, IEnumerable<string> categoryIds,
+        public async Task AssignCategories(Guid productId, IEnumerable<Guid> categoryIds,
             CancellationToken token = default)
         {
             var (existingCategories, notFoundCategories) =
@@ -150,7 +149,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task RetainCategories(string productId, IEnumerable<string> categoryIds,
+        public async Task RetainCategories(Guid productId, IEnumerable<Guid> categoryIds,
             CancellationToken token = default)
         {
             var productItem = await GetEntityByIdAsync(productId, token);
@@ -159,7 +158,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task SetIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
+        public async Task SetIngredients(Guid productId, IEnumerable<IngredientUsageDto> ingredientUsages,
             CancellationToken token = default)
         {
             var (existingCategories, notFoundCategories) =
@@ -175,7 +174,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task AssignIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
+        public async Task AssignIngredients(Guid productId, IEnumerable<IngredientUsageDto> ingredientUsages,
             CancellationToken token = default)
         {
             var (existingCategories, notFoundCategories) =
@@ -192,7 +191,7 @@ namespace Catalog.Core.Services.Implementations
         }
 
         /// <inheritdoc />
-        public async Task RetainIngredients(string productId, IEnumerable<string> ingredientIds,
+        public async Task RetainIngredients(Guid productId, IEnumerable<Guid> ingredientIds,
             CancellationToken token = default)
         {
             var productItem = await GetEntityByIdAsync(productId, token);
@@ -202,7 +201,7 @@ namespace Catalog.Core.Services.Implementations
         }
         
         /// <inheritdoc />
-        public async Task SetOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default)
+        public async Task SetOptions(Guid productId, IEnumerable<Guid> optionIds, CancellationToken token = default)
         {
             var (existingOptions, notFoundOptions) =
                 await ValidateOptions(optionIds.ToArray(), token);
@@ -217,7 +216,7 @@ namespace Catalog.Core.Services.Implementations
         }
         
         /// <inheritdoc />
-        public async Task AssignOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default)
+        public async Task AssignOptions(Guid productId, IEnumerable<Guid> optionIds, CancellationToken token = default)
         {
             var (existingOptions, notFoundOptions) =
                 await ValidateOptions(optionIds.ToArray(), token);
@@ -232,7 +231,7 @@ namespace Catalog.Core.Services.Implementations
         }
         
         /// <inheritdoc />
-        public async Task RetainOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default)
+        public async Task RetainOptions(Guid productId, IEnumerable<Guid> optionIds, CancellationToken token = default)
         {
             var productItem = await GetEntityByIdAsync(productId, token);
             productItem.CategoryId = productItem.OptionId.Where(cat => !optionIds.Contains(cat)).ToArray();
@@ -244,7 +243,7 @@ namespace Catalog.Core.Services.Implementations
         /// </summary>
         /// <param name="inputCategories">Categories to check</param>
         /// <param name="token">Token to cancel operation</param>
-        private async Task<(string[] found, string[] notFound)> ValidateCategories(string[] inputCategories,
+        private async Task<(Guid[] found, Guid[] notFound)> ValidateCategories(Guid[] inputCategories,
             CancellationToken token = default)
         {
             var existingCategories =
@@ -285,7 +284,7 @@ namespace Catalog.Core.Services.Implementations
         /// </summary>
         /// <param name="inputOptions">Options to check</param>
         /// <param name="token">Token to cancel operation</param>
-        private async Task<(string[] found, string[] notFound)> ValidateOptions(string[] inputOptions,
+        private async Task<(Guid[] found, Guid[] notFound)> ValidateOptions(Guid[] inputOptions,
             CancellationToken token = default)
         {
             var existingOptions =

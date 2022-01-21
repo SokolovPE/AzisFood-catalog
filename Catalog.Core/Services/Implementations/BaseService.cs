@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using AzisFood.DataEngine.Interfaces;
+using AzisFood.DataEngine.Abstractions.Interfaces;
 using Catalog.Core.Services.Interfaces;
 using Catalog.Sdk.Models;
 using Microsoft.Extensions.Logging;
@@ -88,7 +88,7 @@ namespace Catalog.Core.Services.Implementations
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Dto of element</returns>
         /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
-        public virtual async Task<TDto> GetByIdAsync(string id, CancellationToken token = default)
+        public virtual async Task<TDto> GetByIdAsync(Guid id, CancellationToken token = default)
         {
             var item = await GetEntityByIdAsync(id, token);
             return Mapper.Map<TDto>(item);
@@ -101,7 +101,7 @@ namespace Catalog.Core.Services.Implementations
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Entity element</returns>
         /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
-        protected async Task<T> GetEntityByIdAsync(string id, CancellationToken token = default)
+        protected async Task<T> GetEntityByIdAsync(Guid id, CancellationToken token = default)
         {
             var item = await Repository.GetHashAsync(id, token);
             if (item != default) return item;
@@ -144,7 +144,7 @@ namespace Catalog.Core.Services.Implementations
         /// <param name="item">New value</param>
         /// <param name="token">Token for operation cancel</param>
         /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
-        public virtual async Task UpdateAsync(string id, TRequestDto item, CancellationToken token = default)
+        public virtual async Task UpdateAsync(Guid id, TRequestDto item, CancellationToken token = default)
         {
             var itemFromDb = await Repository.GetAsync(id, token);
 
@@ -155,7 +155,6 @@ namespace Catalog.Core.Services.Implementations
             }
 
             var itemUpdated = Mapper.Map<T>(item);
-            itemUpdated.Id = id;
             await Repository.UpdateAsync(id, itemUpdated, token);
         }
 
@@ -166,7 +165,7 @@ namespace Catalog.Core.Services.Implementations
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Deletion result</returns>
         /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
-        public virtual async Task<T> DeleteAsync(string id, CancellationToken token = default)
+        public virtual async Task<T> DeleteAsync(Guid id, CancellationToken token = default)
         {
             var item = await Repository.GetAsync(id, token);
 
@@ -176,7 +175,7 @@ namespace Catalog.Core.Services.Implementations
                 throw new KeyNotFoundException();
             }
 
-            await Repository.RemoveAsync(item.Id, token);
+            await Repository.RemoveAsync(item, token);
             return item;
         }
 
@@ -185,7 +184,7 @@ namespace Catalog.Core.Services.Implementations
         /// </summary>
         /// <param name="token">Token for operation cancel</param>
         /// <param name="ids">Array of identifiers</param>
-        public virtual async Task DeleteAsync(string[] ids, CancellationToken token = default)
+        public virtual async Task DeleteAsync(Guid[] ids, CancellationToken token = default)
         {
             if (ids.Length > 0) await Repository.RemoveManyAsync(ids, token);
         }

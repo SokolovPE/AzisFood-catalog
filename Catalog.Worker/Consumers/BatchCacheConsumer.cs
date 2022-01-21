@@ -8,7 +8,7 @@ using AzisFood.MQ.Abstractions.Models;
 using GreenPipes;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
-using AzisFood.DataEngine.Interfaces;
+using AzisFood.DataEngine.Abstractions.Interfaces;
 
 namespace Catalog.Worker.Consumers
 {

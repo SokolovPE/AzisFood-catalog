@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using AzisFood.DataEngine.Interfaces;
+using AzisFood.DataEngine.Abstractions.Interfaces;
 using Catalog.Sdk.Models;
 
 namespace Catalog.Core.Services.Interfaces
@@ -30,7 +31,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="id">Identifier of entity</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Instance of entity</returns>
-        Task<TDto> GetByIdAsync(string id, CancellationToken token = default);
+        Task<TDto> GetByIdAsync(Guid id, CancellationToken token = default);
 
         /// <summary>
         /// Add new entity to catalog
@@ -47,7 +48,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="product">Entity to be updated</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Insertion result</returns>
-        Task UpdateAsync(string id, TRequestDto product, CancellationToken token = default);
+        Task UpdateAsync(Guid id, TRequestDto product, CancellationToken token = default);
 
         /// <summary>
         /// Delete entity from catalog
@@ -55,7 +56,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="id">Identifier of entity to be deleted</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Deletion result</returns>
-        Task<T> DeleteAsync(string id, CancellationToken token = default);
+        Task<T> DeleteAsync(Guid id, CancellationToken token = default);
 
         /// <summary>
         /// Delete entities from catalog
@@ -63,6 +64,6 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="ids">Array with identifiers of entities to be deleted</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Deletion result</returns>
-        Task DeleteAsync(string[] ids, CancellationToken token = default);
+        Task DeleteAsync(Guid[] ids, CancellationToken token = default);
     }
 }

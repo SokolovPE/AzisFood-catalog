@@ -1,4 +1,5 @@
-﻿using AzisFood.CacheService.Abstractions.Models;
+﻿using System;
+using AzisFood.CacheService.Abstractions.Models;
 using AzisFood.DataEngine.Mongo.Models;
 using AzisFood.MQ.Abstractions.Attributes;
 
@@ -18,7 +19,7 @@ namespace Catalog.DataAccess.Models
         /// <summary>
         /// Possible subcategories
         /// </summary>
-        public string[] SubCategories { get; set; }
+        public Guid[] SubCategories { get; set; }
         
         /// <summary>
         /// Order of category

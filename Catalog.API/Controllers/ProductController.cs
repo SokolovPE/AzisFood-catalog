@@ -37,11 +37,11 @@ namespace Catalog.Controllers
         /// <param name="id">Id of entity to get</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns></returns>
-        [HttpGet("Category/{id:length(24)}")]
+        [HttpGet("Category/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ProductDto[]>> GetInCategory(string id, CancellationToken token)
+        public async Task<ActionResult<ProductDto[]>> GetInCategory(Guid id, CancellationToken token)
         {
             try
             {
@@ -64,10 +64,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to set to</param>
         /// <param name="categoryIds">Collection of category IDs to be set</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("SetCategories/{productId:length(24)}")]
+        [HttpPatch("SetCategories/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> SetCategories(string productId, [FromBody] IEnumerable<string> categoryIds,
+        public async Task<ActionResult> SetCategories(Guid productId, [FromBody] IEnumerable<Guid> categoryIds,
             CancellationToken token)
         {
             try
@@ -88,10 +88,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to assign to</param>
         /// <param name="categoryIds">Collection of category IDs to be assigned</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("AssignCategories/{productId:length(24)}")]
+        [HttpPatch("AssignCategories/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> AssignCategories(string productId, [FromBody] IEnumerable<string> categoryIds,
+        public async Task<ActionResult> AssignCategories(Guid productId, [FromBody] IEnumerable<Guid> categoryIds,
             CancellationToken token)
         {
             try
@@ -112,10 +112,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to retain from</param>
         /// <param name="categoryIds">Collection of category IDs to be retained</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("RetainCategories/{productId:length(24)}")]
+        [HttpPatch("RetainCategories/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> RetainCategories(string productId, [FromBody] IEnumerable<string> categoryIds,
+        public async Task<ActionResult> RetainCategories(Guid productId, [FromBody] IEnumerable<Guid> categoryIds,
             CancellationToken token)
         {
             try
@@ -136,10 +136,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to set to</param>
         /// <param name="ingredientUsages">Collection of ingredient usages to be set</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("SetIngredients/{productId:length(24)}")]
+        [HttpPatch("SetIngredients/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> SetIngredients(string productId,
+        public async Task<ActionResult> SetIngredients(Guid productId,
             [FromBody] IEnumerable<IngredientUsageDto> ingredientUsages, CancellationToken token)
         {
             try
@@ -160,10 +160,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to assign to</param>
         /// <param name="ingredientUsages">Collection of ingredient usages to be assigned</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("AssignIngredients/{productId:length(24)}")]
+        [HttpPatch("AssignIngredients/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> AssignCategories(string productId,
+        public async Task<ActionResult> AssignCategories(Guid productId,
             [FromBody] IEnumerable<IngredientUsageDto> ingredientUsages,
             CancellationToken token)
         {
@@ -185,11 +185,11 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to retain from</param>
         /// <param name="ingredientIds">Collection of ingredient IDs to be retained</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("RetainIngredients/{productId:length(24)}")]
+        [HttpPatch("RetainIngredients/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> RetainIngredients(string productId,
-            [FromBody] IEnumerable<string> ingredientIds,
+        public async Task<ActionResult> RetainIngredients(Guid productId,
+            [FromBody] IEnumerable<Guid> ingredientIds,
             CancellationToken token)
         {
             try
@@ -210,10 +210,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to set to</param>
         /// <param name="optionIds">Collection of option IDs to be set</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("SetOptions/{productId:length(24)}")]
+        [HttpPatch("SetOptions/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> SetOptions(string productId, [FromBody] IEnumerable<string> optionIds,
+        public async Task<ActionResult> SetOptions(Guid productId, [FromBody] IEnumerable<Guid> optionIds,
             CancellationToken token)
         {
             try
@@ -234,10 +234,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to assign to</param>
         /// <param name="optionIds">Collection of option IDs to be assigned</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("AssignOptions/{productId:length(24)}")]
+        [HttpPatch("AssignOptions/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> AssignOptions(string productId, [FromBody] IEnumerable<string> optionIds,
+        public async Task<ActionResult> AssignOptions(Guid productId, [FromBody] IEnumerable<Guid> optionIds,
             CancellationToken token)
         {
             try
@@ -258,10 +258,10 @@ namespace Catalog.Controllers
         /// <param name="productId">ID of product to retain from</param>
         /// <param name="optionIds">Collection of option IDs to be retained</param>
         /// <param name="token">Token for operation cancel</param>
-        [HttpPatch("RetainOptions/{productId:length(24)}")]
+        [HttpPatch("RetainOptions/{productId}")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> RetainOptions(string productId, [FromBody] IEnumerable<string> optionIds,
+        public async Task<ActionResult> RetainOptions(Guid productId, [FromBody] IEnumerable<Guid> optionIds,
             CancellationToken token)
         {
             try

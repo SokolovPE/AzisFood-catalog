@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalog.DataAccess.Models;
@@ -15,14 +16,14 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="categoryId">Id of category to search for</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns>List of products in provided category</returns>
-        Task<ProductDto[]> GetProductsInCategory(string categoryId, CancellationToken token = default);
+        Task<ProductDto[]> GetProductsInCategory(Guid categoryId, CancellationToken token = default);
         
         /// <summary>
         /// Delete listed ingredients from all products
         /// </summary>
         /// <param name="ingredientIds">Identifiers of ingredient to be removed</param>
         /// <param name="token">Token for operation cancel</param>
-        Task DeleteIngredients(IEnumerable<string> ingredientIds, CancellationToken token = default);
+        Task DeleteIngredients(IEnumerable<Guid> ingredientIds, CancellationToken token = default);
 
         /// <summary>
         /// Set categories to product, will replace existing ones
@@ -30,7 +31,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to set to</param>
         /// <param name="categoryIds">Collection of category IDs to be set</param>
         /// <param name="token">Token for operation cancel</param>
-        Task SetCategories(string productId, IEnumerable<string> categoryIds, CancellationToken token = default);
+        Task SetCategories(Guid productId, IEnumerable<Guid> categoryIds, CancellationToken token = default);
         
         /// <summary>
         /// Assign additional categories to product
@@ -38,7 +39,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to assign to</param>
         /// <param name="categoryIds">Collection of category IDs to be assigned</param>
         /// <param name="token">Token for operation cancel</param>
-        Task AssignCategories(string productId, IEnumerable<string> categoryIds, CancellationToken token = default);
+        Task AssignCategories(Guid productId, IEnumerable<Guid> categoryIds, CancellationToken token = default);
 
         /// <summary>
         /// Retain categories from product
@@ -46,7 +47,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to retain from</param>
         /// <param name="categoryIds">Collection of category IDs to be retained</param>
         /// <param name="token">Token for operation cancel</param>
-        Task RetainCategories(string productId, IEnumerable<string> categoryIds, CancellationToken token = default);
+        Task RetainCategories(Guid productId, IEnumerable<Guid> categoryIds, CancellationToken token = default);
 
         /// <summary>
         /// Set ingredients to product, will replace existing ones
@@ -54,7 +55,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to set to</param>
         /// <param name="ingredientUsages">Collection of ingredient usages to be set</param>
         /// <param name="token">Token for operation cancel</param>
-        Task SetIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
+        Task SetIngredients(Guid productId, IEnumerable<IngredientUsageDto> ingredientUsages,
             CancellationToken token = default);
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to assign to</param>
         /// <param name="ingredientUsages">Array of ingredient usages to be assigned</param>
         /// <param name="token">Token for operation cancel</param>
-        Task AssignIngredients(string productId, IEnumerable<IngredientUsageDto> ingredientUsages,
+        Task AssignIngredients(Guid productId, IEnumerable<IngredientUsageDto> ingredientUsages,
             CancellationToken token = default);
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to retain from</param>
         /// <param name="ingredientIds">Collection of ingredient IDs to be retained</param>
         /// <param name="token">Token for operation cancel</param>
-        Task RetainIngredients(string productId, IEnumerable<string> ingredientIds, CancellationToken token = default);
+        Task RetainIngredients(Guid productId, IEnumerable<Guid> ingredientIds, CancellationToken token = default);
         
         /// <summary>
         /// Set available options to product, will replace existing ones
@@ -80,7 +81,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to set to</param>
         /// <param name="optionIds">Collection of option IDs to be set</param>
         /// <param name="token">Token for operation cancel</param>
-        Task SetOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default);
+        Task SetOptions(Guid productId, IEnumerable<Guid> optionIds, CancellationToken token = default);
         
         /// <summary>
         /// Assign available options to product
@@ -88,7 +89,7 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of product to assign to</param>
         /// <param name="optionIds">Collection of option IDs to be assigned</param>
         /// <param name="token">Token for operation cancel</param>
-        Task AssignOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default);
+        Task AssignOptions(Guid productId, IEnumerable<Guid> optionIds, CancellationToken token = default);
 
         /// <summary>
         /// Retain available options from product
@@ -96,6 +97,6 @@ namespace Catalog.Core.Services.Interfaces
         /// <param name="productId">ID of option to retain from</param>
         /// <param name="optionIds">Collection of option IDs to be retained</param>
         /// <param name="token">Token for operation cancel</param>
-        Task RetainOptions(string productId, IEnumerable<string> optionIds, CancellationToken token = default);
+        Task RetainOptions(Guid productId, IEnumerable<Guid> optionIds, CancellationToken token = default);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Catalog.Sdk.Models
 {
@@ -30,7 +31,7 @@ namespace Catalog.Sdk.Models
         /// <summary>
         /// Categories where product is presented
         /// </summary>
-        public string[] CategoryId { get; set; }
+        public Guid[] CategoryId { get; set; }
         
         /// <summary>
         /// Nutrition facts of this product
@@ -50,6 +51,6 @@ namespace Catalog.Sdk.Models
         /// <summary>
         /// Options available for product
         /// </summary>
-        public string[] OptionId { get; set; }
+        public Guid[] OptionId { get; set; }
     }
 }

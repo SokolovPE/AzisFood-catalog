@@ -1,3 +1,5 @@
+using System;
+
 namespace Catalog.Sdk.Models
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace Catalog.Sdk.Models
         /// <summary>
         /// Possible subcategories
         /// </summary>
-        public string[] SubCategories { get; set; }
+        public Guid[] SubCategories { get; set; }
         
         /// <summary>
         /// Order of category

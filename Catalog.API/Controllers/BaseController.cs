@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using AzisFood.DataEngine.Interfaces;
+using AzisFood.DataEngine.Abstractions.Interfaces;
 using Catalog.Core.Services.Interfaces;
 using Catalog.Sdk.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Catalog.Controllers
 {
@@ -71,11 +72,11 @@ namespace Catalog.Controllers
         /// <param name="id">Id of entity to get</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns></returns>
-        [HttpGet("{id:length(24)}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TDto>> Get(string id, CancellationToken token)
+        public async Task<ActionResult<TDto>> Get(Guid id, CancellationToken token)
         {
             try
             {
@@ -127,11 +128,11 @@ namespace Catalog.Controllers
         /// <param name="itemIn">New model of entity</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Indicates success or fail of operation</returns>
-        [HttpPut("{id:length(24)}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(string id, [FromBody] TRequestDto itemIn, CancellationToken token)
+        public async Task<IActionResult> Update(Guid id, [FromBody] TRequestDto itemIn, CancellationToken token)
         {
             try
             {
@@ -155,16 +156,16 @@ namespace Catalog.Controllers
         /// <param name="id">Identifier of entity</param>
         /// <param name="token">Token for operation cancel</param>
         /// <returns>Indicates success or fail of operation</returns>
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(string id, CancellationToken token)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken token)
         {
             try
             {
                 var item = await _service.DeleteAsync(id, token);
-                return Ok($"Successfully deleted [{item.Id}]");
+                return Ok($"Successfully deleted [{JsonConvert.SerializeObject(item)}]");
             }
             catch (KeyNotFoundException)
             {
@@ -185,7 +186,7 @@ namespace Catalog.Controllers
         /// <returns>Indicates success or fail of operation</returns>
         [HttpDelete("DeleteMany")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteMany([FromBody] string[] ids, CancellationToken token)
+        public async Task<IActionResult> DeleteMany([FromBody] Guid[] ids, CancellationToken token)
         {
             await _service.DeleteAsync(ids, token);
             return Ok($"Successfully deleted {ids.Length} item(s)");

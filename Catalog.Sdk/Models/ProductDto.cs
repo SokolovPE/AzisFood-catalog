@@ -1,4 +1,6 @@
-﻿namespace Catalog.Sdk.Models
+﻿using System;
+
+namespace Catalog.Sdk.Models
 {
     /// <summary>
     /// Data transfer object for product
@@ -8,7 +10,7 @@
         /// <summary>
         /// Identifier of product
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         
         /// <summary>
         /// Nutrition facts for serving size of product

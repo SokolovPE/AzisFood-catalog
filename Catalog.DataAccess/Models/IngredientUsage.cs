@@ -1,4 +1,6 @@
-﻿namespace Catalog.DataAccess.Models
+﻿using System;
+
+namespace Catalog.DataAccess.Models
 {
     /// <summary>
     /// Usage of ingredient in product
@@ -8,7 +10,7 @@
         /// <summary>
         /// Identifier of used ingredient
         /// </summary>
-        public string IngredientId { get; set; }
+        public Guid IngredientId { get; set; }
         
         /// <summary>
         /// Amount of used ingredient

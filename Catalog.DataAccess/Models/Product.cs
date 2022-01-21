@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AzisFood.CacheService.Abstractions.Models;
 using AzisFood.DataEngine.Mongo.Models;
 using AzisFood.MQ.Abstractions.Attributes;
@@ -37,7 +38,7 @@ namespace Catalog.DataAccess.Models
         /// <summary>
         /// Categories where product is presented
         /// </summary>
-        public string[] CategoryId { get; set; }
+        public Guid[] CategoryId { get; set; }
         
         /// <summary>
         /// Nutrition facts for 100g of product
@@ -57,6 +58,6 @@ namespace Catalog.DataAccess.Models
         /// <summary>
         /// Options available for product
         /// </summary>
-        public string[] OptionId { get; set; }
+        public Guid[] OptionId { get; set; }
     }
 }

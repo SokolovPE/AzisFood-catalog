@@ -1,3 +1,5 @@
+using System;
+
 namespace Catalog.Sdk.Models
 {
     /// <summary>
@@ -8,6 +10,6 @@ namespace Catalog.Sdk.Models
         /// <summary>
         /// Identifier of ingredient
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

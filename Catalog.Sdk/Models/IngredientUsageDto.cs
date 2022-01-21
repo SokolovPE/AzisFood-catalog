@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace Catalog.Sdk.Models
@@ -10,7 +11,7 @@ namespace Catalog.Sdk.Models
         /// <summary>
         /// Identifier of used ingredient
         /// </summary>
-        public string IngredientId { get; set; }
+        public Guid IngredientId { get; set; }
         
         /// <summary>
         /// Amount of used ingredient
