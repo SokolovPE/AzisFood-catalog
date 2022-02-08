@@ -16,18 +16,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.1.1" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.10" />
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.12" />
+        <PackageReference Include="AzisFood.DataEngine.MQ.Rabbit" Version="1.1.0.12" />
         <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.2" />
         <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="5.2.0" />
-        <PackageReference Include="HotChocolate.AspNetCore" Version="12.5.0" />
-        <PackageReference Include="HotChocolate.Data.MongoDb" Version="12.5.0" />
+        <PackageReference Include="HotChocolate.AspNetCore" Version="12.6.0" />
+        <PackageReference Include="HotChocolate.Data.MongoDb" Version="12.6.0" />
         <PackageReference Include="Jaeger" Version="1.0.3" />
-        <PackageReference Include="MassTransit" Version="7.3.0" />
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.0" />
-        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.0" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.0" />
+        <PackageReference Include="MassTransit" Version="7.3.1" />
+        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
         <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.8.0" />
