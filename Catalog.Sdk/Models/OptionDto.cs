@@ -1,15 +1,14 @@
 using System;
 
-namespace Catalog.Sdk.Models
+namespace Catalog.Sdk.Models;
+
+/// <summary>
+///     Data transfer object for option
+/// </summary>
+public record OptionDto : OptionRequestDto, IDto
 {
     /// <summary>
-    /// Data transfer object for option
+    ///     Identifier of ingredient
     /// </summary>
-    public record OptionDto : OptionRequestDto, IDto
-    {
-        /// <summary>
-        /// Identifier of ingredient
-        /// </summary>
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

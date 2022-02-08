@@ -1,10 +1,8 @@
-﻿namespace Catalog.Core.Services.Interfaces
+﻿namespace Catalog.Core.Services.Interfaces;
+
+/// <summary>
+///     Interface of option service
+/// </summary>
+public interface IOptionService
 {
-    /// <summary>
-    /// Interface of option service
-    /// </summary>
-    public interface IOptionService
-    {
-        
-    }
 }

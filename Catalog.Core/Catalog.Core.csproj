@@ -14,17 +14,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Services" />
+        <Folder Include="Services"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Catalog.DataAccess\Catalog.DataAccess.csproj" />
-      <ProjectReference Include="..\Catalog.Sdk\Catalog.Sdk.csproj" />
+        <ProjectReference Include="..\Catalog.DataAccess\Catalog.DataAccess.csproj"/>
+        <ProjectReference Include="..\Catalog.Sdk\Catalog.Sdk.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="11.0.1" />
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="AutoMapper" Version="11.0.1"/>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
     </ItemGroup>
 
 </Project>

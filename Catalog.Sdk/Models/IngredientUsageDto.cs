@@ -1,32 +1,31 @@
 using System;
 using System.Globalization;
 
-namespace Catalog.Sdk.Models
+namespace Catalog.Sdk.Models;
+
+/// <summary>
+///     Data transfer object for ingredient and it's usage
+/// </summary>
+public record IngredientUsageDto
 {
     /// <summary>
-    /// Data transfer object for ingredient and it's usage
+    ///     Identifier of used ingredient
     /// </summary>
-    public record IngredientUsageDto
+    public Guid IngredientId { get; set; }
+
+    /// <summary>
+    ///     Amount of used ingredient
+    /// </summary>
+    public decimal Amount { get; set; }
+
+    /// <summary>
+    ///     Marker can ingredient be removed or not
+    /// </summary>
+    public bool Toggleable { get; set; }
+
+    public override string ToString()
     {
-        /// <summary>
-        /// Identifier of used ingredient
-        /// </summary>
-        public Guid IngredientId { get; set; }
-        
-        /// <summary>
-        /// Amount of used ingredient
-        /// </summary>
-        public decimal Amount { get; set; }
-        
-        /// <summary>
-        /// Marker can ingredient be removed or not
-        /// </summary>
-        public bool Toggleable { get; set; }
-        
-        public override string ToString()
-        {
-            return
-                $"id: {IngredientId}, amount: {Amount.ToString(CultureInfo.InvariantCulture)} toggleable: {(Toggleable ? "yes" : "no")}";
-        }
+        return
+            $"id: {IngredientId}, amount: {Amount.ToString(CultureInfo.InvariantCulture)} toggleable: {(Toggleable ? "yes" : "no")}";
     }
 }

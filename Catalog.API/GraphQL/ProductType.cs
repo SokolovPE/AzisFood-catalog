@@ -9,7 +9,7 @@ using HotChocolate.Types;
 namespace Catalog.GraphQL;
 
 /// <summary>
-/// GraphQL type description of product
+///     GraphQL type description of product
 /// </summary>
 public class ProductType : ObjectType<Product>
 {
@@ -17,7 +17,7 @@ public class ProductType : ObjectType<Product>
     protected override void Configure(IObjectTypeDescriptor<Product> descriptor)
     {
         descriptor.Description("Represents products in catalog");
-        
+
         descriptor
             .Field(product => product.CategoryId)
             .ResolveWith<Resolvers>(resolvers => resolvers.GetCategories(default!, default!))
@@ -27,12 +27,14 @@ public class ProductType : ObjectType<Product>
             .ResolveWith<Resolvers>(resolvers => resolvers.GetOptions(default!, default!))
             .Description("List of options assigned to product");
     }
-    
+
     private class Resolvers
     {
         public Task<IEnumerable<Category>> GetCategories([Parent] Product product,
-            [Service] ICachedBaseRepository<Category> repository) =>
-            repository.GetHashAsync(category => product.CategoryId.Contains(category.Id));
+            [Service] ICachedBaseRepository<Category> repository)
+        {
+            return repository.GetHashAsync(category => product.CategoryId.Contains(category.Id));
+        }
 
         public Task<IEnumerable<Option>> GetOptions([Parent] Product product,
             [Service] ICachedBaseRepository<Option> repository)
