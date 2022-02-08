@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.10" />
         <PackageReference Include="AzisFood.MQ.Abstractions" Version="1.0.0.2" />
         <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.2" />
         <PackageReference Include="MassTransit" Version="7.3.0" />

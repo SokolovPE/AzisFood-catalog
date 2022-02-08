@@ -1,6 +1,7 @@
 using System.IO;
 using System.Reflection;
 using AzisFood.CacheService.Redis.Extensions;
+using AzisFood.DataEngine.Cache.CacheService.Extensions;
 using AzisFood.DataEngine.Core;
 using AzisFood.DataEngine.Mongo.Extensions;
 using AzisFood.MQ.Rabbit.Extensions;
@@ -38,7 +39,8 @@ namespace Catalog.Worker
                     // Add MongoDb config
                     // Add MongoDb config
                     services
-                        .AddMongoSupport(configuration);
+                        .AddMongoSupport(configuration)
+                        .UseCacheServiceAdapter();
 
                     // Register mappings
                     services.AddMapper();
