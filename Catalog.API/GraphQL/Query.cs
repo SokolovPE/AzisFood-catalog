@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AzisFood.DataEngine.Abstractions.Interfaces;
@@ -12,6 +13,15 @@ namespace Catalog.GraphQL;
 /// </summary>
 public class Query
 {
+
+    /// <summary>
+    ///     Get product by id
+    /// </summary>
+    public Task<Product> GetSingleProduct([Service] ICachedBaseRepository<Product> repository, Guid productId)
+    {
+        return repository.GetHashAsync(productId);
+    }
+    
     /// <summary>
     ///     Get list of products
     /// </summary>
