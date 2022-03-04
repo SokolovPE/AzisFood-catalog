@@ -7,6 +7,7 @@ using AzisFood.DataEngine.MQ.Rabbit.Extensions;
 using AzisFood.MQ.Rabbit.Extensions;
 using Catalog.Core;
 using Catalog.Extensions;
+using Catalog.Services;
 using GraphQL.Server.Ui.Voyager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -77,6 +78,9 @@ public class Startup
 
         // Add GraphQL
         services.AddGraphQL();
+        
+        // Add gRPC
+        services.AddGrpc();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -105,8 +109,9 @@ public class Startup
         {
             endpoints.MapControllers();
             endpoints.MapGraphQL();
+            endpoints.MapGrpcService<CategoryService>();
         });
-
+        
         app.UseGraphQLVoyager(new VoyagerOptions
         {
             GraphQLEndPoint = "/graphql"

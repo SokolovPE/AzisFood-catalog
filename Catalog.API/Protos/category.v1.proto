@@ -1,0 +1,21 @@
+syntax="proto3";
+
+option csharp_namespace="Catalog.ProtoServices";
+import "google/protobuf/empty.proto";
+
+package catalog;
+
+service CategoryService {
+  rpc GetAll (google.protobuf.Empty) returns (CategoryAllResponse);
+}
+
+message CategoryAllResponse {
+  repeated CategoryAllResponseItem items = 1;
+}
+
+message CategoryAllResponseItem {
+  string id = 1;
+  string title = 2;
+  repeated string subCategories = 3;
+  int32 order = 4;
+}

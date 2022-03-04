@@ -3,6 +3,7 @@ using AzisFood.DataEngine.Core.Attributes;
 using AzisFood.DataEngine.Mongo.Models;
 using AzisFood.MQ.Abstractions.Attributes;
 using AzisFood.MQ.Abstractions.Models;
+using MessagePack;
 
 namespace Catalog.DataAccess.Models;
 
@@ -18,15 +19,18 @@ public class Option : MongoRepoEntity
     /// <summary>
     ///     Title of option
     /// </summary>
+    [Key(1)]
     public string Title { get; set; }
 
     /// <summary>
     ///     Url of image cover
     /// </summary>
+    [Key(2)]
     public string ImageUrl { get; set; }
 
     /// <summary>
     ///     Price of option
     /// </summary>
+    [Key(3)]
     public decimal Price { get; set; }
 }
