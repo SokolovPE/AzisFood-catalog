@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>1.0.1</Version>
+        <Description>Catalog service contracts</Description>
+        <AssemblyName>AzisFood.Catalog.Contract</AssemblyName>
+    </PropertyGroup>
+    
+    <Import Project="build.proto.targets" />
+</Project>

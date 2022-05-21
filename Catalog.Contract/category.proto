@@ -1,0 +1,34 @@
+syntax="proto3";
+
+option csharp_namespace="Catalog.Contract.Category";
+import "google/protobuf/empty.proto";
+
+package category;
+
+// Service to operate categories
+service CategoryService {
+  // Get all categories
+  rpc GetAll(google.protobuf.Empty) returns (GetAllResponse);
+}
+
+// Response for all categories request
+message GetAllResponse {
+  // Category collection
+  repeated CategoryResponseItem items = 1;
+}
+
+// Category dto
+message CategoryResponseItem {
+  // Identifier
+  string id = 1;
+  
+  // Title of category
+  string title = 2;
+  
+  // Possible subcategories
+  repeated string subCategories = 3;
+  
+  // Order of category
+  int32 order = 4;
+}
+

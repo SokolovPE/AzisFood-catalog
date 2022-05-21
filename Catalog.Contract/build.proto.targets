@@ -1,0 +1,34 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors>AzisFood</Authors>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <NoWarn>$(NoWarn);NU5128;MSB4181</NoWarn>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(Configuration) != 'Release' AND ($([MsBuild]::IsOsPlatform('OSX')) OR $([MsBuild]::IsOsPlatform('Linux')))">
+        <PackageDestination>$([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))/Nuget</PackageDestination>
+        <ProtoFilesDestination>$([System.Environment]::GetFolderPath(SpecialFolder.UserProfile))/localprotos/</ProtoFilesDestination>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(Configuration) != 'Release' AND $([MsBuild]::IsOsPlatform('Windows'))">
+        <PackageDestination>C:\LocalFeed\</PackageDestination>
+        <ProtoFilesDestination>C:\LocalProtos\</ProtoFilesDestination>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$(Configuration) != 'Release'">
+        <ProtoFiles Include="$(ProjectDir)\*.proto" />
+        <ProtoPackage Include="$(ProjectDir)$(PackageOutputPath)$(PackageId).$(PackageVersion).nupkg" />
+        <ProtoPackageDestination Include="$(PackageDestination)$(PackageId).$(PackageVersion).nupkg" />
+        <Content Include="*.proto">
+            <Pack>true</Pack>
+            <PackagePath>.\proto</PackagePath>
+        </Content>
+    </ItemGroup>
+
+    <Target Name="BuildProto" AfterTargets="GenerateNuspec" Condition="$(Configuration) != 'Release'">
+        <Copy SourceFiles="@(ProtoFiles)" DestinationFolder="$(ProtoFilesDestination)" SkipUnchangedFiles="true" ContinueOnError="true" />
+        <Copy Condition="!Exists(@(ProtoPackageDestination))" SourceFiles="@(ProtoPackage)" Retries="3" RetryDelayMilliseconds="1000" DestinationFolder="$(PackageDestination)" SkipUnchangedFiles="true" ContinueOnError="true" />
+    </Target>
+</Project>
