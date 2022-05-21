@@ -1,6 +1,5 @@
 ﻿using System;
-using AzisFood.DataEngine.Core.Attributes;
-using AzisFood.DataEngine.Mongo.Models;
+using AzisFood.DataEngine.Postgres.Models;
 using AzisFood.MQ.Abstractions.Attributes;
 using MessagePack;
 
@@ -10,8 +9,7 @@ namespace Catalog.DataAccess.Models;
 ///     Model of product category
 /// </summary>
 [BusTopic(Name = "category")]
-[ConnectionAlias("catalog")]
-public class Category : MongoRepoEntity
+public class Category : PgRepoEntity<CatalogDbContext>
 {
     /// <summary>
     ///     Title of category

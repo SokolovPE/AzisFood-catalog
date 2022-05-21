@@ -30,7 +30,7 @@ public class ProductController : BaseController<Product, ProductDto, ProductRequ
     {
         _productService = service;
     }
-
+    
     /// <summary>
     ///     Get entity from database by id
     /// </summary>

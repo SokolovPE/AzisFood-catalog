@@ -1,7 +1,6 @@
 ﻿using System;
 using AzisFood.CacheService.Abstractions.Models;
-using AzisFood.DataEngine.Core.Attributes;
-using AzisFood.DataEngine.Mongo.Models;
+using AzisFood.DataEngine.Postgres.Models;
 using AzisFood.MQ.Abstractions.Attributes;
 using MessagePack;
 
@@ -11,8 +10,7 @@ namespace Catalog.DataAccess.Models;
 ///     Model of product presented in catalog
 /// </summary>
 [BusTopic(Name = "product")]
-[ConnectionAlias("catalog")]
-public class Product : MongoRepoEntity
+public class Product : PgRepoEntity<CatalogDbContext>
 {
     [HashEntryKey] 
     [IgnoreMember]

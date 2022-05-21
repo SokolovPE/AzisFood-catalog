@@ -1,6 +1,5 @@
 ﻿using AzisFood.CacheService.Abstractions.Models;
-using AzisFood.DataEngine.Core.Attributes;
-using AzisFood.DataEngine.Mongo.Models;
+using AzisFood.DataEngine.Postgres.Models;
 using AzisFood.MQ.Abstractions.Attributes;
 using AzisFood.MQ.Abstractions.Models;
 using MessagePack;
@@ -13,8 +12,7 @@ namespace Catalog.DataAccess.Models;
 [BusTopic(Name = "option", Events = new[] {EventType.Deleted, EventType.Recache})]
 // Key for demonstration how to define own name for HashSet, by default h_TypeName
 [HashKey(Key = "h_Option")]
-[ConnectionAlias("catalog")]
-public class Option : MongoRepoEntity
+public class Option : PgRepoEntity<CatalogDbContext>
 {
     /// <summary>
     ///     Title of option

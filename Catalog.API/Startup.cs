@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using AzisFood.CacheService.Redis.Extensions;
 using AzisFood.DataEngine.Cache.CacheService.Extensions;
-using AzisFood.DataEngine.Mongo.Extensions;
 using AzisFood.DataEngine.MQ.Rabbit.Extensions;
+using AzisFood.DataEngine.Postgres.Extensions;
 using AzisFood.MQ.Rabbit.Extensions;
 using Catalog.Core;
 using Catalog.Extensions;
@@ -66,7 +66,7 @@ public class Startup
 
         // Add MongoDb config
         services
-            .AddMongoSupport(Configuration)
+            .AddPostgresSupport(Configuration)
             .UseCacheServiceAdapter()
             .UseRabbitCacheEventHandler();
 

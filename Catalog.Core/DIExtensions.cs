@@ -1,7 +1,9 @@
-﻿using Catalog.Core.Mappings;
+﻿using System;
+using Catalog.Core.Mappings;
 using Catalog.Core.Models;
 using Catalog.Core.Services.Implementations;
 using Catalog.Core.Services.Interfaces;
+using Catalog.DataAccess;
 using Catalog.DataAccess.Models;
 using Catalog.Sdk.Models;
 using Jaeger;
@@ -97,5 +99,26 @@ public static class DIExtensions
         // Product service
         services.AddTransient<IProductService, ProductService>();
         services.AddTransient<IValidatorService<Product>, ProductValidatorService>();
+    }
+
+    /// <summary>
+    ///     Add initial filler of database
+    /// </summary>
+    /// <param name="serviceProvider">Provider of services</param>
+    /// <param name="configuration">Config of application</param>
+    public static void AddSeeder(this IServiceProvider serviceProvider, IConfiguration configuration)
+    {
+        // Read configuration, if seeder disabled - nothing to do here
+        var seederEnabled = configuration.GetSection("EnableSeeder").Get<bool>();
+        if(!seederEnabled) return;
+        
+        // Get scope factory, if failed - nothing to do here
+        var scopedFactory = serviceProvider.GetService<IServiceScopeFactory>();
+        if (scopedFactory == null) return;
+        
+        // Create scope and seed initial data
+        using var scope = scopedFactory.CreateScope();
+        var seeder = serviceProvider.GetRequiredService<CatalogDbSeeder>();
+        seeder.Seed();
     }
 }

@@ -1,6 +1,5 @@
-﻿using AzisFood.DataEngine.Mongo.Models;
+﻿using AzisFood.DataEngine.Postgres.Models;
 using MessagePack;
-using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
 namespace Catalog.DataAccess.Models;
@@ -8,15 +7,15 @@ namespace Catalog.DataAccess.Models;
 /// <summary>
 ///     Product nutrition facts per 100g
 /// </summary>
-public class NutritionFact : MongoRepoEntity
+public class NutritionFact : PgRepoEntity<CatalogDbContext>
 {
     /// <summary>
     ///     Hide original id from entity
     /// </summary>
-    [BsonIgnore]
-    [JsonIgnore]
-    [IgnoreMember]
-    internal new string Id { get; set; }
+    // [JsonIgnore]
+    // [IgnoreMember]
+    // [System.ComponentModel.DataAnnotations.Key]
+    // internal new string Id { get; set; }
 
     // Energy in kJoules
     [Key(1)]

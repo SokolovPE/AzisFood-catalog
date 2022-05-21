@@ -1,4 +1,5 @@
 ﻿using System;
+using AzisFood.DataEngine.Postgres.Models;
 using MessagePack;
 
 namespace Catalog.DataAccess.Models;
@@ -7,7 +8,7 @@ namespace Catalog.DataAccess.Models;
 ///     Usage of ingredient in product
 /// </summary>
 [MessagePackObject]
-public class IngredientUsage
+public class IngredientUsage : PgRepoEntity<CatalogDbContext>
 {
     /// <summary>
     ///     Identifier of used ingredient
