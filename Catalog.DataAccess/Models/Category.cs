@@ -21,7 +21,7 @@ public class Category : PgRepoEntity<CatalogDbContext>
     ///     Possible subcategories
     /// </summary>
     [Key(2)]
-    public Guid[] SubCategories { get; set; }
+    public Guid[] SubCategories { get; set; } = Array.Empty<Guid>();
 
     /// <summary>
     ///     Order of category

@@ -6,6 +6,7 @@ using AzisFood.DataEngine.MQ.Rabbit.Extensions;
 using AzisFood.DataEngine.Postgres.Extensions;
 using AzisFood.MQ.Rabbit.Extensions;
 using Catalog.Core;
+using Catalog.DataAccess;
 using Catalog.Extensions;
 using Catalog.Services;
 using GraphQL.Server.Ui.Voyager;
@@ -67,6 +68,7 @@ public class Startup
         // Add MongoDb config
         services
             .AddPostgresSupport(Configuration)
+            .AddPostgresContext<CatalogDbContext>()
             .UseCacheServiceAdapter()
             .UseRabbitCacheEventHandler();
 
