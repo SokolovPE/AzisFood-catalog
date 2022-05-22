@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AzisFood.CacheService.Abstractions.Models;
 using AzisFood.DataEngine.Postgres.Models;
 using AzisFood.MQ.Abstractions.Attributes;
@@ -62,7 +63,7 @@ public class Product : PgRepoEntity<CatalogDbContext>
     ///     Ingredients product made of
     /// </summary>
     [Key(8)]
-    public IngredientUsage[] Ingredients { get; set; }
+    public ICollection<IngredientUsage> Ingredients { get; set; }
 
     /// <summary>
     ///     Options available for product
