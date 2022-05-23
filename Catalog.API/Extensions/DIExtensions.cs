@@ -18,12 +18,9 @@ public static class DIExtensions
     {
         serviceCollection
             .AddGraphQLServer()
-            .AddQueryType<Query>()
-            .AddType<ProductType>()
+            .AddQueryType<CatalogQuery>()
             .AddFiltering()
             .AddSorting()
-            .AddMongoDbFiltering()
-            .AddMongoDbSorting()
-            .AddMongoDbProjections();
+            .AddProjections();
     }
 }
