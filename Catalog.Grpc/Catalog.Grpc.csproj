@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.16" />
+        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.17" />
         <PackageReference Include="AzisFood.DataEngine.MQ.Rabbit" Version="1.1.0.12" />
         <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.2" />        
     </ItemGroup>
