@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.17" />
-        <PackageReference Include="AzisFood.DataEngine.MQ.Rabbit" Version="1.1.0.12" />
-        <PackageReference Include="AzisFood.MQ.Abstractions" Version="1.0.0.2" />
-        <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.2" />
+        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.19" />
+        <PackageReference Include="AzisFood.DataEngine.MQ.Rabbit" Version="1.1.0.14" />
+        <PackageReference Include="AzisFood.MQ.Abstractions" Version="1.0.0.3" />
+        <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.4" />
         <PackageReference Include="MassTransit" Version="7.3.1" />
         <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
         <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />

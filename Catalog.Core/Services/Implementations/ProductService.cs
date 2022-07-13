@@ -45,7 +45,7 @@ public class ProductService : BaseService<Product, ProductDto, ProductRequestDto
         try
         {
             var items =
-                await Repository.GetHashAsync(product => product.CategoryId.Contains(categoryId), token);
+                await Repository.GetHashAsync(product => product.CategoryId.Contains(categoryId), token: token);
             return Mapper.Map<ProductDto[]>(items);
         }
         catch (OperationCanceledException)
@@ -87,7 +87,7 @@ public class ProductService : BaseService<Product, ProductDto, ProductRequestDto
     /// <inheritdoc />
     public async Task DeleteIngredients(IEnumerable<Guid> ingredientIds, CancellationToken token = default)
     {
-        var products = await Repository.GetAsync(token);
+        var products = await Repository.GetAsync(token: token);
         var productsToUpdate = products.Where(p =>
             p.Ingredients.Select(i => i.IngredientId).Intersect(ingredientIds.ToImmutableList()).Any());
         var toUpdate = productsToUpdate as Product[] ?? productsToUpdate.ToArray();
@@ -232,7 +232,7 @@ public class ProductService : BaseService<Product, ProductDto, ProductRequestDto
         CancellationToken token = default)
     {
         var existingCategories =
-            (await _categoryRepository.GetHashAsync(c => inputCategories.Contains(c.Id), token))
+            (await _categoryRepository.GetHashAsync(c => inputCategories.Contains(c.Id), token: token))
             .Select(x => x.Id)
             .ToArray();
         var notFoundCategories = inputCategories.Except(existingCategories).ToArray();
@@ -251,7 +251,7 @@ public class ProductService : BaseService<Product, ProductDto, ProductRequestDto
         var input = inputIngredients.ToArray();
         var inputIngredientIds = input.Select(x => x.IngredientId).ToArray();
         var existingIngredientIds =
-            (await _ingredientRepository.GetHashAsync(i => inputIngredientIds.Contains(i.Id), token))
+            (await _ingredientRepository.GetHashAsync(i => inputIngredientIds.Contains(i.Id), token: token))
             .Select(x => x.Id)
             .ToArray();
         var notFoundIngredientIds = inputIngredientIds.Except(existingIngredientIds).ToArray();
@@ -273,7 +273,7 @@ public class ProductService : BaseService<Product, ProductDto, ProductRequestDto
         CancellationToken token = default)
     {
         var existingOptions =
-            (await _optionRepository.GetHashAsync(c => inputOptions.Contains(c.Id), token))
+            (await _optionRepository.GetHashAsync(c => inputOptions.Contains(c.Id), token: token))
             .Select(x => x.Id)
             .ToArray();
         var notFoundOptions = inputOptions.Except(existingOptions).ToArray();

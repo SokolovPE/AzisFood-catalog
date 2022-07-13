@@ -27,7 +27,7 @@ public class CategoryService : Contract.Category.CategoryService.CategoryService
     {
         var span = _tracer.BuildSpan("category.get-all").AsChildOf(_tracer.ActiveSpan).Start();
         var hashGetSpan = _tracer.BuildSpan("hash-get").AsChildOf(span).Start();
-        var items = await _repository.GetHashAsync(context.CancellationToken);
+        var items = await _repository.GetHashAsync(token: context.CancellationToken);
         hashGetSpan.Finish();
 
         var conversionSpan = _tracer.BuildSpan("conversion").AsChildOf(span).Start();

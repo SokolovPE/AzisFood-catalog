@@ -66,7 +66,7 @@ public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
     {
         try
         {
-            var items = await Repository.GetHashAsync(token);
+            var items = await Repository.GetHashAsync(token: token);
             return Mapper.Map<List<TDto>>(items);
         }
         catch (OperationCanceledException)
@@ -129,7 +129,7 @@ public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
     /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
     public virtual async Task UpdateAsync(Guid id, TRequestDto item, CancellationToken token = default)
     {
-        var itemFromDb = await Repository.GetAsync(id, token);
+        var itemFromDb = await Repository.GetAsync(id, token: token);
 
         if (itemFromDb == null)
         {
@@ -150,7 +150,7 @@ public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
     /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
     public virtual async Task<T> DeleteAsync(Guid id, CancellationToken token = default)
     {
-        var item = await Repository.GetAsync(id, token);
+        var item = await Repository.GetAsync(id, token: token);
 
         if (item == null)
         {
@@ -158,7 +158,7 @@ public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
             throw new KeyNotFoundException();
         }
 
-        await Repository.RemoveAsync(item, token);
+        await Repository.RemoveAsync(item, token: token);
         return item;
     }
 
@@ -181,7 +181,7 @@ public class BaseService<T, TDto, TRequestDto> : IService<T, TDto, TRequestDto>
     /// <exception cref="KeyNotFoundException">Occurs when element is not presented in collection</exception>
     protected async Task<T> GetEntityByIdAsync(Guid id, CancellationToken token = default)
     {
-        var item = await Repository.GetHashAsync(id, token);
+        var item = await Repository.GetHashAsync(id, token: token);
         if (item != default) return item;
 
         var msg = $"Requested {EntityName} with id: {id} was not found in catalog.";

@@ -32,7 +32,7 @@ public class CategoryService : Catalog.ProtoServices.CategoryService.CategorySer
     {
         var span = _tracer.BuildSpan("grpc-category.get-all").AsChildOf(_tracer.ActiveSpan).Start();
         var hashGetSpan = _tracer.BuildSpan("hash-get").AsChildOf(span).Start();
-        var items = await _repository.GetHashAsync(CancellationToken.None);
+        var items = await _repository.GetHashAsync(token: CancellationToken.None);
         hashGetSpan.Finish();
         var conversionSpan = _tracer.BuildSpan("conversion").AsChildOf(span).Start();
         var result = items.Select(x => new CategoryAllResponseItem()
@@ -42,7 +42,7 @@ public class CategoryService : Catalog.ProtoServices.CategoryService.CategorySer
             Order = x.Order,
             SubCategories = {x.SubCategories.Select(s => s.ToString())}
         });
-        var response = new CategoryAllResponse() {Items = {result}};
+        var response = new CategoryAllResponse {Items = {result}};
         conversionSpan.Finish();
         span.Finish();
         return response;

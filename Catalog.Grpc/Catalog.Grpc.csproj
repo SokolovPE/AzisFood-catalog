@@ -7,19 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.20.1" />
-        <PackageReference Include="Grpc.Tools" Version="2.46.1">
-            <PrivateAssets>All</PrivateAssets>
+        <PackageReference Include="Google.Protobuf" Version="3.21.2" />
+        <PackageReference Include="Grpc.Tools" Version="2.47.0">
+            <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>            
         </PackageReference>
-        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.46.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.47.0" />
         <PackageReference Include="AzisFood.Catalog.Contract" Version="1.0.1" GeneratePathProperty="true" />
         <Protobuf Include="$(PkgAzisFood_Catalog_Contract)/proto/*.proto" GrpcServices="Server" ProtoRoot="$(PkgAzisFood_Catalog_Contract)/proto/" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.46.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
+        <PackageReference Include="Grpc.AspNetCore" Version="2.47.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -27,9 +27,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.17" />
-        <PackageReference Include="AzisFood.DataEngine.MQ.Rabbit" Version="1.1.0.12" />
-        <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.2" />        
+        <PackageReference Include="AzisFood.DataEngine.Cache.CacheService" Version="1.1.0.19" />
+        <PackageReference Include="AzisFood.DataEngine.MQ.Rabbit" Version="1.1.0.14" />
+        <PackageReference Include="AzisFood.MQ.Rabbit" Version="1.0.1.4" />        
     </ItemGroup>
     
     <ItemGroup>
@@ -42,14 +42,14 @@
         <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
         <PackageReference Include="OpenTracing.Contrib.NetCore" Version="0.8.0" />
-        <PackageReference Include="Serilog" Version="2.10.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+        <PackageReference Include="Serilog" Version="2.11.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
         <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
-        <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.48" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
     </ItemGroup>
 
     <ItemGroup>
